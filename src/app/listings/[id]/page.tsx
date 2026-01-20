@@ -1,0 +1,210 @@
+import { createClient } from "@/lib/supabase-server";
+import { notFound } from "next/navigation";
+import { 
+  ChevronLeft, 
+  MapPin, 
+  Clock, 
+  ShieldCheck, 
+  MessageCircle, 
+  Share2, 
+  Heart,
+  ChevronRight,
+  User,
+  ShoppingBag
+} from "lucide-react";
+import Link from "next/link";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: listing } = await supabase.from('listings').select('title, description').eq('id', id).single();
+
+  return {
+    title: listing ? `${listing.title} | MarketPro` : 'Listing Not Found',
+    description: listing?.description || 'View this item on MarketPro.',
+  };
+}
+
+export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  // Fetch listing with owner details
+  const { data: listing, error } = await supabase
+    .from('listings')
+    .select(`
+      *,
+      profiles:owner_id (
+        full_name,
+        username,
+        avatar_url,
+        created_at
+      )
+    `)
+    .eq('id', id)
+    .single();
+
+  if (error || !listing) {
+    return notFound();
+  }
+
+  const formattedDate = new Date(listing.created_at).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  return (
+    <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6">
+      <div className="container mx-auto max-w-7xl">
+        <Link 
+          href="/browse" 
+          className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-indigo-600 transition-colors mb-8 group"
+        >
+          <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span>Back to Marketplace</span>
+        </Link>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Side: Images & Description */}
+          <div className="lg:col-span-8 space-y-8">
+            <div className="bg-white rounded-[40px] p-4 border border-slate-100 shadow-sm">
+              <div className="relative aspect-video rounded-[32px] overflow-hidden bg-slate-100">
+                {listing.images && listing.images[0] ? (
+                  <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-200">
+                    <ShoppingBag className="w-24 h-24" />
+                  </div>
+                )}
+                
+                {/* Image Gallery Nav (Mock) */}
+                {listing.images?.length > 1 && (
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
+                    {listing.images.map((_: any, i: number) => (
+                      <div key={i} className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-white shadow-lg' : 'bg-white/40'}`} />
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Image Thumbnails (Mock) */}
+              {listing.images?.length > 1 && (
+                <div className="grid grid-cols-6 gap-4 mt-4 p-2">
+                  {listing.images.map((img: string, i: number) => (
+                    <div key={i} className={`aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 ${i === 0 ? 'border-indigo-600' : 'border-transparent opacity-60 hover:opacity-100 transition-all'}`}>
+                      <img src={img} className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white rounded-[40px] p-8 lg:p-12 border border-slate-100 shadow-sm text-left">
+              <h2 className="text-2xl font-black text-slate-900 mb-6 flex items-center">
+                Description
+              </h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-lg text-slate-600 leading-relaxed whitespace-pre-wrap">
+                  {listing.description}
+                </p>
+              </div>
+
+              <div className="mt-12 pt-12 border-t border-slate-50 grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                  <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Listed</span>
+                  <p className="font-bold text-slate-700">{formattedDate}</p>
+                </div>
+                <div>
+                  <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Condition</span>
+                  <p className="font-bold text-slate-700">Excellent</p>
+                </div>
+                <div>
+                  <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Location</span>
+                  <p className="font-bold text-slate-700">Online / Remote</p>
+                </div>
+                <div>
+                  <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Category</span>
+                  <p className="font-bold text-slate-700">{listing.category}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Price, Actions & Seller Info */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="bg-white rounded-[40px] p-8 lg:p-10 border border-slate-100 shadow-xl shadow-indigo-100/20 text-left">
+              <div className="flex items-start justify-between mb-8">
+                <div>
+                  <span className="inline-block px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-[2px] rounded-full mb-4">
+                    Active Listing
+                  </span>
+                  <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                    {listing.title}
+                  </h1>
+                </div>
+                <button className="p-3 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 hover:text-red-500 transition-all">
+                  <Heart className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="mb-10">
+                <span className="block text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Current Price</span>
+                <div className="text-5xl font-black text-slate-900 tracking-tighter">
+                  ${listing.price.toLocaleString()}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <button className="w-full py-5 bg-indigo-600 text-white rounded-[24px] font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center space-x-3 group">
+                  <MessageCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                  <span>Contact Seller</span>
+                </button>
+                <div className="grid grid-cols-2 gap-4">
+                  <button className="py-4 border-2 border-slate-100 text-slate-600 rounded-[20px] font-bold hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+                    <Share2 className="w-5 h-5" />
+                    <span>Share</span>
+                  </button>
+                  <button className="py-4 border-2 border-slate-100 text-slate-600 rounded-[20px] font-bold hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+                    <ShieldCheck className="w-5 h-5" />
+                    <span>Report</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Seller Info */}
+            <div className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm text-left">
+              <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">About the Seller</h3>
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 overflow-hidden border-2 border-white shadow-md">
+                  {listing.profiles?.avatar_url ? (
+                    <img src={listing.profiles.avatar_url} alt="Seller" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-8 h-8" />
+                  )}
+                </div>
+                <div>
+                  <h4 className="font-black text-slate-900 text-lg underline decoration-indigo-100 decoration-4 underline-offset-4">
+                    {listing.profiles?.full_name || 'Verified Seller'}
+                  </h4>
+                  <p className="text-sm text-slate-500 font-medium">@{listing.profiles?.username || 'user'}</p>
+                </div>
+              </div>
+              <div className="bg-slate-50 rounded-2xl p-4 flex items-center justify-between">
+                <div className="flex items-center space-x-2 text-indigo-600">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider">Trusted Seller</span>
+                </div>
+                <Link href={`/seller/${listing.owner_id}`} className="text-xs font-black text-slate-400 hover:text-indigo-600 flex items-center transition-colors">
+                  View Profile <ChevronRight className="ml-1 w-3 h-3" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

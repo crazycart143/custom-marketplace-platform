@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/Navbar";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "MarketPro | Premium Marketplace Platform",
+  description: "The ultimate custom marketplace platform for buyers and sellers.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className="scroll-smooth">
+      <body className={`${inter.className} antialiased selection:bg-indigo-100 selection:text-indigo-900`}>
+        <Navbar />
+        <main>{children}</main>
+        <footer className="bg-slate-50 border-t border-slate-200 py-12">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="flex items-center space-x-2 mb-4 md:mb-0">
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                  <ShoppingBag className="text-white w-5 h-5" />
+                </div>
+                <span className="text-xl font-bold text-slate-900">
+                  Market<span className="text-indigo-600">Pro</span>
+                </span>
+              </div>
+              <p className="text-slate-500 text-sm">
+                &copy; {new Date().getFullYear()} MarketPro. Built for performance and scalability.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </body>
+    </html>
+  );
+}
+
+import { ShoppingBag } from "lucide-react";
