@@ -99,6 +99,22 @@ export default function Home() {
                   Search
                 </button>
               </form>
+              
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <span className="text-sm font-bold text-slate-400 uppercase tracking-widest mr-2">Popular:</span>
+                {['iPhone', 'Vintage', 'Camera', 'Table'].map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => {
+                      setQuery(tag);
+                      router.push(`/browse?q=${encodeURIComponent(tag)}`);
+                    }}
+                    className="px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-xs font-bold text-slate-600 hover:border-indigo-200 hover:text-indigo-600 transition-all"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>

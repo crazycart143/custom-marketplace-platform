@@ -14,26 +14,51 @@ import {
   LayoutDashboard
 } from 'lucide-react';
 
+import AvatarUpload from '@/components/AvatarUpload';
+
 export default function ProfilePage() {
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
+  const [stats, setStats] = useState({
+    listings: 0,
+    sales: 0,
+    messages: 0
+  });
 
   useEffect(() => {
-    async function getProfile() {
+    async function getData() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data } = await supabase
+        // Fetch profile
+        const { data: profileData } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
         
-        if (data) setProfile(data);
+        if (profileData) setProfile(profileData);
+
+        // Fetch stats
+        const { count: listingsCount } = await supabase
+          .from('listings')
+          .select('*', { count: 'exact', head: true })
+          .eq('owner_id', user.id);
+
+        const { count: convosCount } = await supabase
+          .from('conversations')
+          .select('*', { count: 'exact', head: true })
+          .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
+
+        setStats({
+          listings: listingsCount || 0,
+          sales: 0, // Placeholder until payments/orders are implemented
+          messages: convosCount || 0
+        });
       }
       setLoading(false);
     }
-    getProfile();
+    getData();
   }, [supabase]);
 
   const handleSignOut = async () => {
@@ -59,39 +84,37 @@ export default function ProfilePage() {
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm"
+              className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm"
             >
-              <div className="flex flex-col items-center text-center mb-8">
-                <div className="relative group">
-                  <div className="w-24 h-24 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-4 overflow-hidden border-2 border-white shadow-md">
-                    {profile?.avatar_url ? (
-                      <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <UserIcon className="w-10 h-10" />
-                    )}
-                  </div>
-                  <button className="absolute bottom-2 right-0 p-2 bg-indigo-600 text-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Camera className="w-4 h-4" />
-                  </button>
+              <div className="flex flex-col items-center text-center mb-10">
+                <AvatarUpload 
+                  url={profile?.avatar_url} 
+                  onUploadAction={(url: string) => setProfile({ ...profile, avatar_url: url })} 
+                />
+                <div className="mt-6">
+                  <h2 className="text-xl font-black text-slate-900 leading-tight">
+                    {profile?.full_name || 'New User'}
+                  </h2>
+                  <p className="text-sm text-slate-500 font-bold mt-1">
+                    @{profile?.username || 'user'}
+                  </p>
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 text-left">{profile?.full_name || 'New User'}</h2>
-                <p className="text-sm text-slate-500 text-left">@{profile?.username || 'username'}</p>
-                <div className="mt-4 px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full uppercase tracking-wider block w-fit">
-                  {profile?.role || 'Buyer'}
+                <div className="mt-6 px-4 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-black rounded-full uppercase tracking-wider inline-block">
+                  {profile?.role || 'Verified Member'}
                 </div>
               </div>
 
-              <nav className="space-y-1">
+              <nav className="space-y-2">
                 {[
                   { icon: LayoutDashboard, label: 'Dashboard', href: '/profile' },
                   { icon: Package, label: 'My Listings', href: '/profile/listings' },
-                  { icon: MessageSquare, label: 'Messages', href: '/profile/messages' },
+                  { icon: MessageSquare, label: 'Messages', href: '/messages' },
                   { icon: Settings, label: 'Settings', href: '/profile/settings' },
                 ].map((item) => (
                   <Link 
                     key={item.label}
                     href={item.href}
-                    className="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all font-medium"
+                    className="flex items-center space-x-3 px-4 py-3.5 rounded-2xl text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all font-bold text-sm"
                   >
                     <item.icon className="w-5 h-5" />
                     <span>{item.label}</span>
@@ -99,7 +122,7 @@ export default function ProfilePage() {
                 ))}
                 <button 
                   onClick={handleSignOut}
-                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium mt-4"
+                  className="w-full flex items-center space-x-3 px-4 py-3.5 rounded-2xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm mt-6"
                 >
                   <LogOut className="w-5 h-5" />
                   <span>Sign Out</span>
@@ -113,21 +136,23 @@ export default function ProfilePage() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm"
+              className="bg-white rounded-[40px] p-10 border border-slate-100 shadow-sm text-left"
             >
-              <h1 className="text-2xl font-bold text-slate-900 mb-6 text-left">Account Overview</h1>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                <div className="p-6 bg-slate-50 rounded-2xl">
-                  <span className="text-sm text-slate-500 font-medium uppercase tracking-wider">Total Listings</span>
-                  <div className="text-3xl font-extrabold text-slate-900 mt-1">0</div>
+              <h1 className="text-2xl font-black text-slate-900 mb-8 flex items-center">
+                Account Overview
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100/50">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[2px]">Total Listings</span>
+                  <div className="text-4xl font-black text-slate-900 mt-2">{stats.listings}</div>
                 </div>
-                <div className="p-6 bg-slate-50 rounded-2xl">
-                  <span className="text-sm text-slate-500 font-medium uppercase tracking-wider">Total Sales</span>
-                  <div className="text-3xl font-extrabold text-slate-900 mt-1">$0.00</div>
+                <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100/50">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[2px]">Total Balance</span>
+                  <div className="text-4xl font-black text-slate-900 mt-2">${stats.sales.toFixed(2)}</div>
                 </div>
-                <div className="p-6 bg-slate-50 rounded-2xl">
-                  <span className="text-sm text-slate-500 font-medium uppercase tracking-wider">Messages</span>
-                  <div className="text-3xl font-extrabold text-slate-900 mt-1">0</div>
+                <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100/50">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[2px]">Conversations</span>
+                  <div className="text-4xl font-black text-slate-900 mt-2">{stats.messages}</div>
                 </div>
               </div>
             </motion.div>

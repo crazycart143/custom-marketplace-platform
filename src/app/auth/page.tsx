@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase';
 import { motion } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function AuthPage() {
   const supabase = createClient();
@@ -13,7 +14,18 @@ export default function AuthPage() {
 
   useEffect(() => {
     setOrigin(window.location.origin);
-  }, []);
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        toast.success("Welcome back! Signed in successfully.");
+      }
+      if (event === 'SIGNED_OUT') {
+        toast.info("Signed out successfully.");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
@@ -47,8 +59,6 @@ export default function AuthPage() {
                 },
                 radii: {
                   borderRadiusButton: '12px',
-                  buttonPadding: '12px 16px',
-                  inputPadding: '12px 16px',
                 }
               }
             }

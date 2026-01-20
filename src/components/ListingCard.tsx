@@ -46,7 +46,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         </div>
       </Link>
 
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-6 flex flex-col grow">
         <div className="flex items-center justify-between mb-3">
           <span className="text-2xl font-black text-slate-900 tracking-tight">${listing.price.toLocaleString()}</span>
           <div className="flex items-center text-slate-400 text-xs font-medium">
@@ -56,7 +56,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         </div>
         
         <Link href={`/listings/${listing.id}`}>
-          <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-snug mb-4 flex-grow">
+          <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-snug mb-4 grow">
             {listing.title}
           </h3>
         </Link>

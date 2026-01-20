@@ -102,6 +102,29 @@ create policy "Users can send messages to their conversations." on messages
     )
   );
 
+-- Create reviews table
+create table reviews (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  reviewer_id uuid references profiles(id) on delete cascade not null,
+  seller_id uuid references profiles(id) on delete cascade not null,
+  rating integer check (rating >= 1 and rating <= 5) not null,
+  comment text,
+  listing_id uuid references listings(id) on delete set null
+);
+
+-- RLS for reviews
+alter table reviews enable row level security;
+
+create policy "Reviews are viewable by everyone." on reviews
+  for select using (true);
+
+create policy "Authenticated users can leave reviews." on reviews
+  for insert with check (auth.uid() = reviewer_id);
+
+-- Trigger to create profile on signup
+-- ... [Rest of file]
+
 -- Trigger to create profile on signup
 create function public.handle_new_user()
 returns trigger as $$

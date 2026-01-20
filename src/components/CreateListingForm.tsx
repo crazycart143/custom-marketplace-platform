@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const CATEGORIES = [
   "Electronics", "Fashion", "Home & Garden", "Sports & Outdoors", 
@@ -46,10 +47,15 @@ export default function CreateListingForm() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
+      if (images.length + newFiles.length > 8) {
+        toast.error("You can only upload up to 8 images.");
+        return;
+      }
       setImages(prev => [...prev, ...newFiles]);
       
       const newPreviews = newFiles.map(file => URL.createObjectURL(file));
       setPreviews(prev => [...prev, ...newPreviews]);
+      toast.success(`${newFiles.length} image(s) added.`);
     }
   };
 
@@ -59,16 +65,23 @@ export default function CreateListingForm() {
   };
 
   const handleSubmit = async () => {
+    if (!formData.title || !formData.price || !formData.description || images.length === 0) {
+      toast.error("Please fill in all required fields and upload at least one image.");
+      return;
+    }
+
     setLoading(true);
+    const toastId = toast.loading("Publishing your listing...");
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("No user found");
+      if (!user) throw new Error("No authenticated user found.");
 
       // 1. Upload Images
       const imageUrls = [];
       for (const image of images) {
         const fileExt = image.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
+        const fileName = `${crypto.randomUUID()}.${fileExt}`;
         const filePath = `${user.id}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
@@ -99,11 +112,12 @@ export default function CreateListingForm() {
 
       if (insertError) throw insertError;
 
+      toast.success("Listing published successfully!", { id: toastId });
       router.push('/profile/listings');
       router.refresh();
     } catch (error: any) {
       console.error("Error creating listing:", error.message);
-      alert("Failed to create listing. Please try again.");
+      toast.error(error.message || "Failed to create listing. Please try again.", { id: toastId });
     } finally {
       setLoading(false);
     }

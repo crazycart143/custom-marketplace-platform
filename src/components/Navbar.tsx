@@ -13,6 +13,7 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   
   const supabase = createClient();
   const router = useRouter();
@@ -22,16 +23,32 @@ export default function Navbar() {
       setIsScrolled(window.scrollY > 20);
     };
     
-    const getUser = async () => {
+    const getData = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('avatar_url, full_name')
+          .eq('id', session.user.id)
+          .single();
+        setProfile(profileData);
+      } else {
+        setProfile(null);
+      }
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        getData();
+      } else {
+        setProfile(null);
+      }
     });
 
-    getUser();
+    getData();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -127,15 +144,18 @@ export default function Navbar() {
               )}
             </AnimatePresence>
 
-            <button className={`p-2 rounded-full transition-colors hover:bg-slate-100/10 ${
-              isScrolled ? "text-slate-600" : "text-white"
-            }`}>
+            <Link 
+              href="/messages"
+              className={`p-2 rounded-full transition-colors hover:bg-slate-100/10 ${
+                isScrolled ? "text-slate-600" : "text-white"
+              }`}
+            >
               <MessageCircle className="w-5 h-5" />
-            </button>
+            </Link>
             
             <Link
               href={user ? "/profile" : "/auth"}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-full font-semibold transition-all ${
+              className={`flex items-center space-x-2 p-1.5 pr-4 rounded-full font-black transition-all ${
                 isScrolled
                   ? "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-100"
                   : "bg-white text-indigo-600 hover:bg-slate-50 shadow-xl"
@@ -143,13 +163,23 @@ export default function Navbar() {
             >
               {user ? (
                 <>
-                  <User className="w-4 h-4" />
-                  <span>Dashboard</span>
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100">
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-600">
+                        <User className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-sm">Dashboard</span>
                 </>
               ) : (
                 <>
-                  <LogIn className="w-4 h-4" />
-                  <span>Sign In</span>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 text-slate-400">
+                    <LogIn className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm">Sign In</span>
                 </>
               )}
             </Link>

@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
+import ContactSellerButton from "@/components/ContactSellerButton";
+import ReviewSection from "@/components/ReviewSection";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -129,6 +131,8 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
                   <p className="font-bold text-slate-700">{listing.category}</p>
                 </div>
               </div>
+
+              <ReviewSection sellerId={listing.owner_id} listingId={listing.id} />
             </div>
           </div>
 
@@ -157,10 +161,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
               </div>
 
               <div className="space-y-4">
-                <button className="w-full py-5 bg-indigo-600 text-white rounded-[24px] font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center space-x-3 group">
-                  <MessageCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                  <span>Contact Seller</span>
-                </button>
+                <ContactSellerButton listingId={listing.id} sellerId={listing.owner_id} />
                 <div className="grid grid-cols-2 gap-4">
                   <button className="py-4 border-2 border-slate-100 text-slate-600 rounded-[20px] font-bold hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
                     <Share2 className="w-5 h-5" />
