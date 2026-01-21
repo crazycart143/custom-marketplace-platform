@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase-server";
 import ListingCard from "@/components/ListingCard";
-import { Search, Filter, SlidersHorizontal, PackageSearch, ArrowUpDown } from "lucide-react";
+import { Search, Filter, SlidersHorizontal, PackageSearch, ArrowUpDown, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 const CATEGORIES = [
   "All Categories", "Electronics", "Fashion", "Home & Garden", "Sports & Outdoors", 
-  "Collectibles", "Books & Media", "Automotive", "Other"
+  "Collectibles", "Books & Media", "Automotive", "Other",
+  "Tutoring", "Graphic Design", "Technical Support", "Creative Services", "Writing & Proofreading"
 ];
 
 const SORT_OPTIONS = [
@@ -28,15 +29,17 @@ export default async function BrowsePage({
   const params = await searchParams;
   const query = typeof params.q === 'string' ? params.q : "";
   const category = typeof params.category === 'string' ? params.category : "All Categories";
+  const university = typeof params.university === 'string' ? params.university : "";
   const minPrice = typeof params.min === 'string' ? params.min : "";
   const maxPrice = typeof params.max === 'string' ? params.max : "";
   const sort = typeof params.sort === 'string' ? params.sort : "newest";
   
   const supabase = await createClient();
 
+  // We need to join profiles to filter by university
   let listingsQuery = supabase
     .from('listings')
-    .select('*')
+    .select('*, profiles:owner_id!inner(university)')
     .eq('status', 'active');
 
   if (query) {
@@ -48,6 +51,10 @@ export default async function BrowsePage({
 
   if (category && category !== "All Categories") {
     listingsQuery = listingsQuery.eq('category', category);
+  }
+
+  if (university) {
+    listingsQuery = listingsQuery.ilike('profiles.university', `%${university}%`);
   }
 
   if (minPrice) {
@@ -128,6 +135,33 @@ export default async function BrowsePage({
                   </Link>
                 ))}
               </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+              <div className="flex items-center space-x-2 mb-6">
+                <GraduationCap className="w-5 h-5 text-indigo-600" />
+                <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">University</h2>
+              </div>
+              <form action="/browse" className="space-y-4">
+                <input type="hidden" name="q" value={query} />
+                <input type="hidden" name="category" value={category} />
+                <input type="hidden" name="sort" value={sort} />
+                <input 
+                  name="university"
+                  type="text" 
+                  placeholder="e.g. Stanford" 
+                  defaultValue={university}
+                  className="w-full px-4 py-3 bg-slate-50 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold"
+                />
+                <button className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all">
+                  Filter University
+                </button>
+                {university && (
+                  <Link href={`/browse?q=${query}&category=${category}&sort=${sort}`} className="block text-center text-xs font-bold text-indigo-600 mt-2">
+                    Clear University
+                  </Link>
+                )}
+              </form>
             </div>
 
             <div className="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">

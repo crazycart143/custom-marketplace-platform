@@ -21,6 +21,7 @@ import OffersList from '@/components/OffersList';
 import FavoritesList from '@/components/FavoritesList';
 import SellerAnalytics from '@/components/SellerAnalytics';
 import SkillsSection from '@/components/SkillsSection';
+import VerificationBadge from '@/components/VerificationBadge';
 
 export default function ProfilePage() {
   const supabase = createClient();
@@ -98,9 +99,12 @@ export default function ProfilePage() {
                   onUploadAction={(url: string) => setProfile({ ...profile, avatar_url: url })} 
                 />
                 <div className="mt-6">
-                  <h2 className="text-xl font-black text-slate-900 leading-tight">
-                    {profile?.full_name || 'New User'}
-                  </h2>
+                  <div className="flex items-center justify-center space-x-2">
+                    <h2 className="text-xl font-black text-slate-900 leading-tight">
+                      {profile?.full_name || 'New User'}
+                    </h2>
+                    <VerificationBadge isVerified={profile?.is_verified} showText={false} />
+                  </div>
                   <p className="text-sm text-slate-500 font-bold mt-1">
                     @{profile?.username || 'user'}
                   </p>
