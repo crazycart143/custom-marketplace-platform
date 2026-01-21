@@ -13,7 +13,11 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState({
     full_name: "",
     username: "",
-    role: "buyer"
+    role: "buyer",
+    university: "",
+    major: "",
+    year_of_study: "",
+    bio: ""
   });
 
   useEffect(() => {
@@ -30,7 +34,11 @@ export default function SettingsPage() {
           setProfile({
             full_name: data.full_name || "",
             username: data.username || "",
-            role: data.role || "buyer"
+            role: data.role || "buyer",
+            university: data.university || "",
+            major: data.major || "",
+            year_of_study: data.year_of_study || "",
+            bio: data.bio || ""
           });
         }
       }
@@ -53,6 +61,10 @@ export default function SettingsPage() {
           full_name: profile.full_name,
           username: profile.username,
           role: profile.role,
+          university: profile.university,
+          major: profile.major,
+          year_of_study: profile.year_of_study,
+          bio: profile.bio,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
@@ -147,6 +159,56 @@ export default function SettingsPage() {
                       <option value="buyer">Buyer</option>
                       <option value="seller">Seller</option>
                     </select>
+                  </div>
+
+                  <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] ml-1">University</label>
+                      <input 
+                        type="text"
+                        value={profile.university}
+                        onChange={(e) => setProfile({ ...profile, university: e.target.value })}
+                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold"
+                        placeholder="e.g. Stanford University"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] ml-1">Major / Course</label>
+                      <input 
+                        type="text"
+                        value={profile.major}
+                        onChange={(e) => setProfile({ ...profile, major: e.target.value })}
+                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold"
+                        placeholder="e.g. Computer Science"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] ml-1">Year of Study</label>
+                    <select
+                      value={profile.year_of_study}
+                      onChange={(e) => setProfile({ ...profile, year_of_study: e.target.value })}
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold appearance-none cursor-pointer"
+                    >
+                      <option value="">Select Year</option>
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="Graduate">Graduate</option>
+                      <option value="PhD">PhD</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] ml-1">Professional Bio</label>
+                    <textarea 
+                      value={profile.bio}
+                      onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold min-h-[120px] resize-none"
+                      placeholder="Tell us about your skills and experience..."
+                    />
                   </div>
                 </div>
 

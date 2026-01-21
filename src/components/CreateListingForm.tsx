@@ -24,7 +24,8 @@ import confetti from "canvas-confetti";
 
 const CATEGORIES = [
   "Electronics", "Fashion", "Home & Garden", "Sports & Outdoors", 
-  "Collectibles", "Books & Media", "Automotive", "Other"
+  "Collectibles", "Books & Media", "Automotive", "Other",
+  "Tutoring", "Graphic Design", "Technical Support", "Creative Services", "Writing & Proofreading"
 ];
 
 export default function CreateListingForm() {
@@ -35,7 +36,11 @@ export default function CreateListingForm() {
     category: "Electronics",
     price: "",
     description: "",
-    status: "active"
+    status: "active",
+    type: "product",
+    pricing_model: "fixed",
+    delivery_time: "1-3 days",
+    revisions_count: 0
   });
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -132,7 +137,11 @@ export default function CreateListingForm() {
           price: parseFloat(formData.price),
           description: formData.description,
           images: imageUrls,
-          status: 'active'
+          status: 'active',
+          type: formData.type,
+          pricing_model: formData.type === 'service' ? formData.pricing_model : 'fixed',
+          delivery_time: formData.type === 'service' ? formData.delivery_time : null,
+          revisions_count: formData.type === 'service' ? parseInt(formData.revisions_count.toString()) : 0
         });
 
       if (insertError) throw insertError;
@@ -190,12 +199,32 @@ export default function CreateListingForm() {
                 <h2 className="text-2xl font-bold text-slate-900">Basic Information</h2>
               </div>
 
+              {/* Type Selection */}
+              <div className="flex p-1 bg-slate-100 rounded-2xl mb-8">
+                <button
+                  onClick={() => setFormData(prev => ({ ...prev, type: 'product' }))}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-xl font-bold transition-all ${formData.type === 'product' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  <Package className="w-4 h-4" />
+                  <span>Physical Product</span>
+                </button>
+                <button
+                  onClick={() => setFormData(prev => ({ ...prev, type: 'service' }))}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-xl font-bold transition-all ${formData.type === 'service' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  <Tag className="w-4 h-4" />
+                  <span>Student Service</span>
+                </button>
+              </div>
+
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Listing Title</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">
+                  {formData.type === 'product' ? 'Listing Title' : 'Service Title'}
+                </label>
                 <input
                   type="text"
                   name="title"
-                  placeholder="What are you selling?"
+                  placeholder={formData.type === 'product' ? "What are you selling?" : "e.g. Professional Python Tutoring"}
                   value={formData.title}
                   onChange={handleInputChange}
                   className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
@@ -217,7 +246,9 @@ export default function CreateListingForm() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Price ($)</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">
+                    {formData.type === 'product' ? 'Price ($)' : `Service Fee (${formData.pricing_model === 'fixed' ? '$' : '$/hr'})`}
+                  </label>
                   <div className="relative">
                     <DollarSign className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
@@ -231,6 +262,50 @@ export default function CreateListingForm() {
                   </div>
                 </div>
               </div>
+
+              {formData.type === 'service' && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="space-y-6 pt-4 border-t border-slate-100"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Pricing Model</label>
+                      <select
+                        name="pricing_model"
+                        value={formData.pricing_model}
+                        onChange={handleInputChange}
+                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900 appearance-none"
+                      >
+                        <option value="fixed">Fixed Price</option>
+                        <option value="hourly">Hourly Rate</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Est. Delivery Time</label>
+                      <input
+                        type="text"
+                        name="delivery_time"
+                        placeholder="e.g. 2 days"
+                        value={formData.delivery_time}
+                        onChange={handleInputChange}
+                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Number of Revisions</label>
+                    <input
+                      type="number"
+                      name="revisions_count"
+                      value={formData.revisions_count}
+                      onChange={handleInputChange}
+                      className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
+                    />
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
 

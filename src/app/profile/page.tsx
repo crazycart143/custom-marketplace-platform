@@ -11,7 +11,8 @@ import {
   MessageSquare, 
   LogOut, 
   Camera,
-  LayoutDashboard
+  LayoutDashboard,
+  GraduationCap
 } from 'lucide-react';
 
 import AvatarUpload from '@/components/AvatarUpload';
@@ -102,8 +103,23 @@ export default function ProfilePage() {
                     @{profile?.username || 'user'}
                   </p>
                 </div>
+                
+                {profile?.university && (
+                  <div className="mt-6 flex flex-col items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 text-indigo-600 font-black text-[11px] uppercase tracking-wider">
+                      <GraduationCap className="w-4 h-4" />
+                      <span>{profile.university}</span>
+                    </div>
+                    {profile.major && (
+                      <div className="text-slate-500 text-[10px] font-bold">
+                        {profile.major} • {profile.year_of_study || 'Student'}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="mt-6 px-4 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-black rounded-full uppercase tracking-wider inline-block">
-                  {profile?.role || 'Verified Member'}
+                  {profile?.role === 'seller' ? 'Verified Seller' : 'Student Member'}
                 </div>
               </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Package, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Package, MapPin, Clock, ArrowRight, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import FavoriteButton from "./FavoriteButton";
 
@@ -12,9 +12,13 @@ interface Listing {
   category: string;
   images: string[];
   created_at: string;
+  type?: 'product' | 'service';
+  pricing_model?: 'fixed' | 'hourly';
 }
 
 export default function ListingCard({ listing }: { listing: Listing }) {
+  const isService = listing.type === 'service';
+  
   const formattedDate = new Date(listing.created_at).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric'
@@ -42,10 +46,16 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             View Details <ArrowRight className="ml-2 w-4 h-4" />
           </span>
         </div>
-        <div className="absolute top-4 left-4 z-10">
+        <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
           <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-indigo-600 font-bold text-xs shadow-sm">
             {listing.category}
           </div>
+          {isService && (
+            <div className="bg-indigo-600 px-3 py-1 rounded-full text-white font-black text-[10px] shadow-sm flex items-center gap-1 uppercase tracking-wider">
+              <GraduationCap className="w-3 h-3" />
+              <span>Student Service</span>
+            </div>
+          )}
         </div>
         <div className="absolute top-4 right-4 z-10">
           <FavoriteButton listingId={listing.id} />
@@ -54,7 +64,12 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 
       <div className="p-6 flex flex-col grow">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-2xl font-black text-slate-900 tracking-tight">${listing.price.toLocaleString()}</span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-black text-slate-900 tracking-tight">${listing.price.toLocaleString()}</span>
+            {isService && listing.pricing_model === 'hourly' && (
+              <span className="text-xs font-bold text-slate-400">/hr</span>
+            )}
+          </div>
           <div className="flex items-center text-slate-400 text-xs font-medium">
             <Clock className="w-3 h-3 mr-1" />
             {formattedDate}
