@@ -40,7 +40,10 @@ export default async function BrowsePage({
     .eq('status', 'active');
 
   if (query) {
-    listingsQuery = listingsQuery.ilike('title', `%${query}%`);
+    listingsQuery = listingsQuery.textSearch('fts', query, {
+      config: 'english',
+      type: 'websearch'
+    });
   }
 
   if (category && category !== "All Categories") {

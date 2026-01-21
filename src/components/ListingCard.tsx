@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Package, MapPin, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import FavoriteButton from "./FavoriteButton";
 
 interface Listing {
   id: string;
@@ -41,8 +42,13 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             View Details <ArrowRight className="ml-2 w-4 h-4" />
           </span>
         </div>
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-indigo-600 font-bold text-xs shadow-sm">
-          {listing.category}
+        <div className="absolute top-4 left-4 z-10">
+          <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-indigo-600 font-bold text-xs shadow-sm">
+            {listing.category}
+          </div>
+        </div>
+        <div className="absolute top-4 right-4 z-10">
+          <FavoriteButton listingId={listing.id} />
         </div>
       </Link>
 

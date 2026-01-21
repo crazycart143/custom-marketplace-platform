@@ -17,6 +17,12 @@ import { Metadata } from "next";
 import ContactSellerButton from "@/components/ContactSellerButton";
 import ReviewSection from "@/components/ReviewSection";
 import ListingActionButtons from "@/components/ListingActionButtons";
+import FavoriteButton from "@/components/FavoriteButton";
+import ShareButton from "@/components/ShareButton";
+import ReportButton from "@/components/ReportButton";
+import VerificationBadge from "@/components/VerificationBadge";
+import FollowButton from "@/components/FollowButton";
+import SimilarItems from "@/components/SimilarItems";
 import * as motion from "framer-motion/client";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -44,7 +50,8 @@ export default async function ListingDetailPage({ params, searchParams }: { para
         full_name,
         username,
         avatar_url,
-        created_at
+        created_at,
+        is_verified
       )
     `)
     .eq('id', id)
@@ -152,6 +159,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
               </div>
 
               <ReviewSection sellerId={listing.owner_id} listingId={listing.id} />
+              <SimilarItems category={listing.category} currentListingId={listing.id} />
             </div>
           </div>
 
@@ -167,9 +175,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
                     {listing.title}
                   </h1>
                 </div>
-                <button className="p-3 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 hover:text-red-500 transition-all">
-                  <Heart className="w-6 h-6" />
-                </button>
+                <FavoriteButton listingId={listing.id} />
               </div>
 
               <div className="mb-10">
@@ -183,14 +189,8 @@ export default async function ListingDetailPage({ params, searchParams }: { para
                 <ListingActionButtons listing={listing} />
                 <ContactSellerButton listingId={listing.id} sellerId={listing.owner_id} />
                 <div className="grid grid-cols-2 gap-4">
-                  <button className="py-4 border-2 border-slate-100 text-slate-600 rounded-[20px] font-bold hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
-                    <Share2 className="w-5 h-5" />
-                    <span>Share</span>
-                  </button>
-                  <button className="py-4 border-2 border-slate-100 text-slate-600 rounded-[20px] font-bold hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
-                    <ShieldCheck className="w-5 h-5" />
-                    <span>Report</span>
-                  </button>
+                  <ShareButton title={listing.title} url={""} />
+                  <ReportButton listingId={listing.id} />
                 </div>
               </div>
             </div>
@@ -207,10 +207,16 @@ export default async function ListingDetailPage({ params, searchParams }: { para
                   )}
                 </div>
                 <div>
-                  <h4 className="font-black text-slate-900 text-lg underline decoration-indigo-100 decoration-4 underline-offset-4">
-                    {listing.profiles?.full_name || 'Verified Seller'}
-                  </h4>
-                  <p className="text-sm text-slate-500 font-medium">@{listing.profiles?.username || 'user'}</p>
+                  <div className="flex items-center space-x-2">
+                    <h4 className="font-black text-slate-900 text-lg underline decoration-indigo-100 decoration-4 underline-offset-4">
+                      {listing.profiles?.full_name || 'Verified Seller'}
+                    </h4>
+                    <VerificationBadge isVerified={listing.profiles?.is_verified} showText={false} />
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <p className="text-sm text-slate-500 font-medium">@{listing.profiles?.username || 'user'}</p>
+                    <FollowButton followingId={listing.owner_id} />
+                  </div>
                 </div>
               </div>
               <div className="bg-slate-50 rounded-2xl p-4 flex items-center justify-between">
