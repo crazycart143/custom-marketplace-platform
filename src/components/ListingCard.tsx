@@ -47,11 +47,11 @@ export default function ListingCard({ listing }: { listing: Listing }) {
           </span>
         </div>
         <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-          <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-indigo-600 font-bold text-xs shadow-sm">
+          <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-brand font-bold text-xs shadow-sm">
             {listing.category}
           </div>
           {isService && (
-            <div className="bg-indigo-600 px-3 py-1 rounded-full text-white font-black text-[10px] shadow-sm flex items-center gap-1 uppercase tracking-wider">
+            <div className="bg-brand px-3 py-1 rounded-full text-white font-black text-[10px] shadow-sm flex items-center gap-1 uppercase tracking-wider">
               <GraduationCap className="w-3 h-3" />
               <span>Student Service</span>
             </div>
@@ -65,7 +65,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
       <div className="p-6 flex flex-col grow">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black text-slate-900 tracking-tight">${listing.price.toLocaleString()}</span>
+            <span className="text-2xl font-black text-black tracking-tight">${listing.price.toLocaleString()}</span>
             {isService && listing.pricing_model === 'hourly' && (
               <span className="text-xs font-bold text-slate-400">/hr</span>
             )}
@@ -77,7 +77,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         </div>
         
         <Link href={`/listings/${listing.id}`}>
-          <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-snug mb-4 grow">
+          <h3 className="text-lg font-bold text-black group-hover:text-brand transition-colors line-clamp-2 leading-snug mb-4 grow">
             {listing.title}
           </h3>
         </Link>
@@ -87,7 +87,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             <MapPin className="w-3 h-3 mr-1" />
             <span>Remote / Global</span>
           </div>
-          <button className="text-indigo-600 hover:text-indigo-700 font-bold text-sm">
+          <button className="text-brand hover:text-brand/80 font-bold text-sm">
             Quick View
           </button>
         </div>

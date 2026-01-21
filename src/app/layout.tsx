@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
+import { ShoppingBag } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} antialiased selection:bg-indigo-100 selection:text-indigo-900`}>
+      <body className={`${inter.className} antialiased selection:bg-brand/20 selection:text-brand-dark`}>
         <Toaster position="top-center" richColors />
         <Navbar />
         <main>{children}</main>
@@ -26,10 +27,10 @@ export default function RootLayout({
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-center text-left">
               <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center">
                   <ShoppingBag className="text-white w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold text-slate-900">
+                <span className="text-xl font-bold text-black">
                   Studentify
                 </span>
               </div>
@@ -43,5 +44,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-import { ShoppingBag } from "lucide-react";

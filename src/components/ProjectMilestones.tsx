@@ -33,7 +33,7 @@ export default function ProjectMilestones({ project }: ProjectProps) {
   const getStatusColor = (status: Milestone['status']) => {
     switch (status) {
       case 'paid': return 'text-emerald-500 bg-emerald-50 border-emerald-100';
-      case 'submitted': return 'text-blue-500 bg-blue-50 border-blue-100';
+      case 'submitted': return 'text-brand bg-brand/5 border-brand/20';
       case 'in_progress': return 'text-amber-500 bg-amber-50 border-amber-100';
       default: return 'text-slate-400 bg-slate-50 border-slate-100';
     }
@@ -52,11 +52,11 @@ export default function ProjectMilestones({ project }: ProjectProps) {
     <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden text-left">
       <div className="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
         <div>
-          <h3 className="text-xl font-black text-slate-900 tracking-tight">{project.title}</h3>
-          <p className="text-sm text-slate-500 font-medium">Freelancer: <span className="text-indigo-600 font-bold">{project.freelancer_name}</span></p>
+          <h3 className="text-xl font-black text-black tracking-tight">{project.title}</h3>
+          <p className="text-sm text-slate-500 font-medium">Freelancer: <span className="text-brand font-bold">{project.freelancer_name}</span></p>
         </div>
         <div className="text-right">
-          <div className="text-2xl font-black text-slate-900">${project.total_amount.toLocaleString()}</div>
+          <div className="text-2xl font-black text-black">${project.total_amount.toLocaleString()}</div>
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Project Value</span>
         </div>
       </div>
@@ -75,8 +75,8 @@ export default function ProjectMilestones({ project }: ProjectProps) {
 
             <div className="flex-1 pt-1">
               <div className="flex items-center justify-between mb-1">
-                <h4 className="font-bold text-slate-900">{milestone.title}</h4>
-                <div className="text-sm font-black text-slate-900">${milestone.amount.toLocaleString()}</div>
+                <h4 className="font-bold text-black">{milestone.title}</h4>
+                <div className="text-sm font-black text-black">${milestone.amount.toLocaleString()}</div>
               </div>
               <div className="flex items-center space-x-3">
                 <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md border ${getStatusColor(milestone.status)}`}>
@@ -94,7 +94,7 @@ export default function ProjectMilestones({ project }: ProjectProps) {
                 <motion.button
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-black hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
+                  className="mt-4 flex items-center space-x-2 px-4 py-2 bg-brand text-white rounded-xl text-xs font-black hover:bg-brand-dark transition-all shadow-md shadow-brand/10"
                 >
                   <CreditCard className="w-3.5 h-3.5" />
                   <span>Release Payment</span>
@@ -110,7 +110,7 @@ export default function ProjectMilestones({ project }: ProjectProps) {
           <AlertCircle className="w-4 h-4" />
           <span className="text-xs font-medium">Funds are held in escrow until milestone is released.</span>
         </div>
-        <button className="flex items-center space-x-2 text-indigo-600 font-bold text-sm hover:translate-x-1 transition-transform">
+        <button className="flex items-center space-x-2 text-brand font-bold text-sm hover:translate-x-1 transition-transform">
           <span>View Project Details</span>
           <ChevronRight className="w-4 h-4" />
         </button>

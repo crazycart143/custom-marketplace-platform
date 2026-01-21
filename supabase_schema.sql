@@ -126,31 +126,41 @@ create policy "Authenticated users can leave reviews." on reviews
 -- ... [Rest of file]
 
 -- Trigger to create profile on signup
-create function public.handle_new_user()
+create or replace function public.handle_new_user()
 returns trigger as $$
 begin
   insert into public.profiles (id, full_name, avatar_url)
   values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
   return new;
 end;
-$$ language plpgsql security modeller;
+$$ language plpgsql security definer;
 
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
 -- STORAGE SETUP
--- Run these to create a bucket for listing images
--- insert into storage.buckets (id, name, public) values ('listings', 'listings', true);
+-- Run these in your Supabase SQL Editor to enable image uploads
 
--- Policy to allow authenticated users to upload images
--- create policy "Authenticated users can upload images"
--- on storage.objects for insert
--- to authenticated
--- with check (bucket_id = 'listings');
+-- 1. Create a public bucket for listing images (and avatars)
+insert into storage.buckets (id, name, public)
+select 'listings', 'listings', true
+where not exists (select 1 from storage.buckets where id = 'listings');
 
--- Policy to allow anyone to view images
--- create policy "Public Access"
--- on storage.objects for select
--- to public
--- using (bucket_id = 'listings');
+-- 2. Policy to allow authenticated users to upload images
+create policy "Authenticated users can upload images"
+on storage.objects for insert
+to authenticated
+with check (bucket_id = 'listings');
+
+-- 3. Policy to allow anyone to view images
+create policy "Public Access"
+on storage.objects for select
+to public
+using (bucket_id = 'listings');
+
+-- 4. Policy to allow users to delete their own images
+create policy "Users can delete their own images"
+on storage.objects for delete
+to authenticated
+using (bucket_id = 'listings');

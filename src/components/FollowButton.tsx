@@ -80,7 +80,7 @@ export default function FollowButton({ followingId, initialIsFollowing = false }
       className={`px-6 py-2 rounded-xl font-bold text-sm transition-all flex items-center space-x-2 ${
         isFollowing 
           ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' 
-          : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-100'
+          : 'bg-brand text-white hover:bg-brand-dark shadow-lg shadow-brand/10'
       }`}
     >
       {isLoading ? (

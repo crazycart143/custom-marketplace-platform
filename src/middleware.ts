@@ -1,8 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -32,6 +31,9 @@ export async function proxy(request: NextRequest) {
             name,
             value,
             ...options,
+            httpOnly: false, // Allow client-side JS to read cookies
+            secure: false,   // Required for localhost
+            sameSite: 'lax',
           })
         },
         remove(name: string, options: CookieOptions) {
@@ -55,16 +57,21 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  const { data: { session } } = await supabase.auth.getSession()
-
-  // Protected routes
-  if (!session && (request.nextUrl.pathname.startsWith('/profile') || request.nextUrl.pathname.startsWith('/sell'))) {
-    return NextResponse.redirect(new URL('/auth', request.url))
-  }
+  // IMPORTANT: DO NOT REMOVE THIS. It refreshes the session if expired.
+  await supabase.auth.getUser()
 
   return response
 }
 
 export const config = {
-  matcher: ['/profile/:path*', '/sell/:path*', '/auth'],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 }

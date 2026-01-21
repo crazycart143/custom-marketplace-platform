@@ -73,7 +73,7 @@ export default function AvatarUpload({
             </div>
           )}
         </div>
-        <label className="absolute -bottom-2 -right-2 p-3 bg-indigo-600 text-white rounded-2xl cursor-pointer hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 group-hover:scale-110">
+        <label className="absolute -bottom-2 -right-2 p-3 bg-brand text-white rounded-2xl cursor-pointer hover:bg-brand-dark transition-all shadow-lg shadow-brand/10 group-hover:scale-110">
           <Camera className="w-5 h-5" />
           <input
             type="file"

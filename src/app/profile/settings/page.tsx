@@ -81,7 +81,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand"></div>
       </div>
     );
   }
@@ -90,7 +90,7 @@ export default function SettingsPage() {
     <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 text-left">
       <div className="container mx-auto max-w-4xl">
         <div className="mb-12">
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Settings</h1>
+          <h1 className="text-3xl font-black text-black tracking-tight">Settings</h1>
           <p className="text-slate-500 font-medium">Manage your account preferences and profile details.</p>
         </div>
 
@@ -107,7 +107,7 @@ export default function SettingsPage() {
                 key={item.label}
                 className={`w-full flex items-center space-x-3 px-6 py-4 rounded-[20px] font-bold text-sm transition-all ${
                   item.active 
-                    ? "bg-white text-indigo-600 shadow-sm border border-slate-100" 
+                    ? "bg-white text-brand shadow-sm border border-slate-100" 
                     : "text-slate-500 hover:bg-slate-100/50"
                 }`}
               >
@@ -132,7 +132,7 @@ export default function SettingsPage() {
                       type="text"
                       value={profile.full_name}
                       onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold"
                       placeholder="e.g. John Doe"
                     />
                   </div>
@@ -144,7 +144,7 @@ export default function SettingsPage() {
                         type="text"
                         value={profile.username}
                         onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-                        className="w-full pl-12 pr-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold"
+                        className="w-full pl-12 pr-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold"
                         placeholder="username"
                       />
                     </div>
@@ -154,7 +154,7 @@ export default function SettingsPage() {
                     <select
                       value={profile.role}
                       onChange={(e) => setProfile({ ...profile, role: e.target.value })}
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold appearance-none cursor-pointer"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold appearance-none cursor-pointer"
                     >
                       <option value="buyer">Buyer</option>
                       <option value="seller">Seller</option>
@@ -168,7 +168,7 @@ export default function SettingsPage() {
                         type="text"
                         value={profile.university}
                         onChange={(e) => setProfile({ ...profile, university: e.target.value })}
-                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold"
                         placeholder="e.g. Stanford University"
                       />
                     </div>
@@ -178,7 +178,7 @@ export default function SettingsPage() {
                         type="text"
                         value={profile.major}
                         onChange={(e) => setProfile({ ...profile, major: e.target.value })}
-                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold"
                         placeholder="e.g. Computer Science"
                       />
                     </div>
@@ -189,7 +189,7 @@ export default function SettingsPage() {
                     <select
                       value={profile.year_of_study}
                       onChange={(e) => setProfile({ ...profile, year_of_study: e.target.value })}
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold appearance-none cursor-pointer"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold appearance-none cursor-pointer"
                     >
                       <option value="">Select Year</option>
                       <option value="1st Year">1st Year</option>
@@ -206,7 +206,7 @@ export default function SettingsPage() {
                     <textarea 
                       value={profile.bio}
                       onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold min-h-[120px] resize-none"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-bold min-h-[120px] resize-none"
                       placeholder="Tell us about your skills and experience..."
                     />
                   </div>
@@ -216,7 +216,7 @@ export default function SettingsPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center space-x-2 px-10 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-slate-800 transition-all shadow-xl shadow-slate-100 disabled:opacity-50"
+                    className="flex items-center space-x-2 px-10 py-4 bg-black text-white rounded-2xl font-black hover:bg-brand transition-all shadow-xl shadow-slate-100 disabled:opacity-50"
                   >
                     {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                     <span>{saving ? 'Saving...' : 'Save Changes'}</span>

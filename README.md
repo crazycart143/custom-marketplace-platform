@@ -71,6 +71,27 @@ Empowering students to turn their skills into tuition and professional experienc
 - **Availability Management**: A booking system that allows students to coordinate service availability with their academic schedules.
 - **Service Agreements**: Simplified contract templates to ensure clear expectations between student freelancers and buyers.
 
+## Phase 5: Student Career & Safety Ecosystem
+
+Transforming the marketplace into a comprehensive career development and secure local exchange hub.
+
+### Career Integration & Credentials
+
+- **Resume Autopilot**: Integrated tools to automatically transform platform-verified project history and endorsements into professional portfolio highlights or resume snippets.
+- **Experience Certificates**: Secure, digital credentials and shareable links proving the successful completion of technical and professional projects.
+- **AI Gig Assistant**: Smart pricing engine that suggests competitive service rates based on the student's academic level, project complexity, and category trends.
+
+### Safety & Trust Architecture
+
+- **Smart Campus Safe-Zones**: Interactive map and database of pre-verified, secure, and university-approved exchange locations for physical product hand-offs.
+- **Academic Honor Code Filter**: Mandatory integrity agreement and educational module for tutoring and academic support categories to ensure compliance with university standards.
+- **Student Agencies**: Collaborative framework allowing students to form multidisciplinary teams (e.g., Design + Marketing) for larger-scale agency-style projects.
+
+### Mobile & Real-time Connectivity
+
+- **Mobile PWA Conversion**: Progressive Web App implementation allowing for home-screen installation and native-like performance on mobile devices.
+- **Push Notification System**: Real-time alerts for incoming messages, project milestones, and purchase offers across all devices.
+
 ## Tech Stack
 
 - **Frontend/Backend**: [Next.js (App Router)](https://nextjs.org/)

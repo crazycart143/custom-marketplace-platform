@@ -14,7 +14,7 @@ export default function ListingActionButtons({ listing }: any) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           onClick={() => setIsCheckoutOpen(true)}
-          className="w-full py-4 bg-indigo-600 text-white rounded-[24px] font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center space-x-2 group"
+          className="w-full py-4 bg-brand text-white rounded-[24px] font-black text-lg hover:bg-brand-dark transition-all shadow-xl shadow-brand/10 flex items-center justify-center space-x-2 group"
         >
           <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
           <span>Buy Now</span>
@@ -22,7 +22,7 @@ export default function ListingActionButtons({ listing }: any) {
         
         <button
           onClick={() => setIsOfferOpen(true)}
-          className="w-full py-4 bg-white border-2 border-indigo-600 text-indigo-600 rounded-[24px] font-black text-lg hover:bg-indigo-50 transition-all flex items-center justify-center space-x-2 group"
+          className="w-full py-4 bg-white border-2 border-brand text-brand rounded-[24px] font-black text-lg hover:bg-brand/5 transition-all flex items-center justify-center space-x-2 group"
         >
           <Tag className="w-5 h-5 group-hover:rotate-12 transition-transform" />
           <span>Make Offer</span>

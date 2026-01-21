@@ -97,7 +97,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
         )}
         <Link 
           href="/browse" 
-          className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-indigo-600 transition-colors mb-8 group"
+          className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-brand transition-colors mb-8 group"
         >
           <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Marketplace</span>
@@ -130,7 +130,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
               {listing.images?.length > 1 && (
                 <div className="grid grid-cols-6 gap-4 mt-4 p-2">
                   {listing.images.map((img: string, i: number) => (
-                    <div key={i} className={`aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 ${i === 0 ? 'border-indigo-600' : 'border-transparent opacity-60 hover:opacity-100 transition-all'}`}>
+                    <div key={i} className={`aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 ${i === 0 ? 'border-brand' : 'border-transparent opacity-60 hover:opacity-100 transition-all'}`}>
                       <img src={img} className="w-full h-full object-cover" />
                     </div>
                   ))}
@@ -139,11 +139,11 @@ export default async function ListingDetailPage({ params, searchParams }: { para
             </div>
 
             <div className="bg-white rounded-[40px] p-8 lg:p-12 border border-slate-100 shadow-sm text-left">
-              <h2 className="text-2xl font-black text-slate-900 mb-6 flex items-center">
+              <h2 className="text-2xl font-black text-black mb-6 flex items-center">
                 {isService ? 'Abilities & Scope' : 'Description'}
               </h2>
               <div className="prose prose-slate max-w-none">
-                <p className="text-lg text-slate-600 leading-relaxed whitespace-pre-wrap">
+                <p className="text-lg text-slate-600 leading-relaxed whitespace-pre-wrap font-black">
                   {listing.description}
                 </p>
               </div>
@@ -176,13 +176,13 @@ export default async function ListingDetailPage({ params, searchParams }: { para
 
           {/* Right Side: Price, Actions & Seller Info */}
           <div className="lg:col-span-4 space-y-8">
-            <div className="bg-white rounded-[40px] p-8 lg:p-10 border border-slate-100 shadow-xl shadow-indigo-100/20 text-left">
+            <div className="bg-white rounded-[40px] p-8 lg:p-10 border border-slate-100 shadow-xl shadow-brand/10 text-left">
               <div className="flex items-start justify-between mb-8">
                 <div>
-                  <span className={`inline-block px-3 py-1 text-[10px] font-black uppercase tracking-[2px] rounded-full mb-4 ${isService ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                  <span className={`inline-block px-3 py-1 text-[10px] font-black uppercase tracking-[2px] rounded-full mb-4 ${isService ? 'bg-brand text-white' : 'bg-brand/10 text-brand'}`}>
                     {isService ? 'Student Service' : 'Active Listing'}
                   </span>
-                  <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                  <h1 className="text-3xl font-black text-black tracking-tight leading-tight">
                     {listing.title}
                   </h1>
                 </div>
@@ -193,7 +193,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
                 <span className="block text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">
                   {isService ? (listing.pricing_model === 'fixed' ? 'Total Project Price' : 'Hourly Rate') : 'Current Price'}
                 </span>
-                <div className="text-5xl font-black text-slate-900 tracking-tighter">
+                <div className="text-5xl font-black text-black tracking-tighter">
                   ${listing.price.toLocaleString()}
                   {isService && listing.pricing_model === 'hourly' && <span className="text-lg text-slate-400 font-bold">/hr</span>}
                 </div>
@@ -213,7 +213,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
             <div className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm text-left">
               <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">About the Student</h3>
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 overflow-hidden border-2 border-white shadow-md">
+                <div className="w-16 h-16 bg-brand/10 rounded-2xl flex items-center justify-center text-brand overflow-hidden border-2 border-white shadow-md">
                   {listing.profiles?.avatar_url ? (
                     <img src={listing.profiles.avatar_url} alt="Seller" className="w-full h-full object-cover" />
                   ) : (
@@ -222,7 +222,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <h4 className="font-black text-slate-900 text-lg underline decoration-indigo-100 decoration-4 underline-offset-4 line-clamp-1">
+                    <h4 className="font-black text-black text-lg underline decoration-brand/20 decoration-4 underline-offset-4 line-clamp-1">
                       {listing.profiles?.full_name || 'Verified Seller'}
                     </h4>
                     <VerificationBadge isVerified={listing.profiles?.is_verified} showText={false} />
@@ -236,7 +236,7 @@ export default async function ListingDetailPage({ params, searchParams }: { para
 
               {listing.profiles?.university && (
                 <div className="mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                  <div className="flex items-center space-x-2 text-indigo-600 mb-1">
+                  <div className="flex items-center space-x-2 text-brand mb-1">
                     <GraduationCap className="w-4 h-4" />
                     <span className="text-[10px] font-black uppercase tracking-wider">{listing.profiles.university}</span>
                   </div>
@@ -252,11 +252,11 @@ export default async function ListingDetailPage({ params, searchParams }: { para
               )}
 
               <div className="bg-slate-50 rounded-2xl p-4 flex items-center justify-between">
-                <div className="flex items-center space-x-2 text-indigo-600">
+                <div className="flex items-center space-x-2 text-brand">
                   <ShieldCheck className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase tracking-wider">Trusted Seller</span>
                 </div>
-                <Link href={`/seller/${listing.owner_id}`} className="text-xs font-black text-slate-400 hover:text-indigo-600 flex items-center transition-colors">
+                <Link href={`/seller/${listing.owner_id}`} className="text-xs font-black text-slate-400 hover:text-brand flex items-center transition-colors">
                   View Profile <ChevronRight className="ml-1 w-3 h-3" />
                 </Link>
               </div>

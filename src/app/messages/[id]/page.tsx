@@ -42,7 +42,7 @@ export default async function MessageDetailPage({ params }: { params: Promise<{ 
       <div className="container mx-auto max-w-5xl">
         <Link 
           href="/messages" 
-          className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-indigo-600 transition-colors mb-8 group"
+          className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-brand transition-colors mb-8 group"
         >
           <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Messages</span>

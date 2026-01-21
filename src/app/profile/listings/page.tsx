@@ -66,7 +66,7 @@ export default function MyListingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand"></div>
       </div>
     );
   }
@@ -76,12 +76,12 @@ export default function MyListingsPage() {
       <div className="container mx-auto max-w-6xl">
         <div className="flex items-center justify-between mb-12">
           <div className="text-left">
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">My Listings</h1>
+            <h1 className="text-3xl font-extrabold text-black tracking-tight">My Listings</h1>
             <p className="text-slate-500 mt-2 font-medium">Manage and track your active marketplace items.</p>
           </div>
           <Link 
             href="/sell"
-            className="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
+            className="flex items-center space-x-2 px-6 py-3 bg-brand text-white rounded-xl font-bold hover:bg-brand-dark transition-all shadow-lg shadow-brand/10"
           >
             <Plus className="w-5 h-5" />
             <span>Create New</span>
@@ -97,13 +97,13 @@ export default function MyListingsPage() {
             <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-300 mx-auto mb-6">
               <Package className="w-10 h-10" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">No listings found</h2>
+            <h2 className="text-2xl font-bold text-black">No listings found</h2>
             <p className="text-slate-500 max-w-md mx-auto mt-2 font-medium">
               You haven't listed any items for sale yet. Start your selling journey today!
             </p>
             <Link 
               href="/sell" 
-              className="mt-8 inline-block px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100"
+              className="mt-8 inline-block px-8 py-4 bg-brand text-white rounded-2xl font-bold hover:bg-brand-dark transition-all shadow-xl shadow-brand/10"
             >
               List Your First Item
             </Link>
@@ -131,7 +131,7 @@ export default function MyListingsPage() {
                       listing.status === 'active' 
                         ? 'bg-green-100 text-green-700' 
                         : listing.status === 'sold'
-                        ? 'bg-slate-900 text-white'
+                        ? 'bg-black text-white'
                         : 'bg-slate-100 text-slate-700'
                     }`}>
                       {listing.status}
@@ -142,7 +142,7 @@ export default function MyListingsPage() {
                     <div className="relative">
                       <button 
                         onClick={() => setActiveMenu(activeMenu === listing.id ? null : listing.id)}
-                        className="p-2 bg-white/90 backdrop-blur-md rounded-xl text-slate-600 hover:text-indigo-600 transition-colors shadow-sm"
+                        className="p-2 bg-white/90 backdrop-blur-md rounded-xl text-slate-600 hover:text-brand transition-colors shadow-sm"
                       >
                         <MoreVertical className="w-5 h-5" />
                       </button>
@@ -158,7 +158,7 @@ export default function MyListingsPage() {
                             {listing.status === 'active' && (
                               <button 
                                 onClick={() => updateStatus(listing.id, 'sold')}
-                                className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center space-x-2"
+                                className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-brand flex items-center space-x-2"
                               >
                                 <CheckCircle2 className="w-4 h-4" />
                                 <span>Mark as Sold</span>
@@ -167,7 +167,7 @@ export default function MyListingsPage() {
                             {listing.status === 'sold' && (
                               <button 
                                 onClick={() => updateStatus(listing.id, 'active')}
-                                className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center space-x-2"
+                                className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-brand flex items-center space-x-2"
                               >
                                 <Plus className="w-4 h-4" />
                                 <span>Relist Item</span>
@@ -175,7 +175,7 @@ export default function MyListingsPage() {
                             )}
                             <Link 
                               href={`/profile/listings/${listing.id}/edit`}
-                              className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center space-x-2"
+                              className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-brand flex items-center space-x-2"
                             >
                               <Edit className="w-4 h-4" />
                               <span>Edit Details</span>
@@ -196,10 +196,10 @@ export default function MyListingsPage() {
 
                 <div className="p-8 grow flex flex-col">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{listing.category}</span>
-                    <span className="font-black text-slate-900 text-lg">${listing.price.toLocaleString()}</span>
+                    <span className="text-[10px] font-black text-brand uppercase tracking-widest">{listing.category}</span>
+                    <span className="font-black text-black text-lg">${listing.price.toLocaleString()}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-snug mb-6 text-left grow">
+                  <h3 className="text-xl font-bold text-black group-hover:text-brand transition-colors line-clamp-2 leading-snug mb-6 text-left grow">
                     {listing.title}
                   </h3>
                   
@@ -207,16 +207,16 @@ export default function MyListingsPage() {
                     <div className="flex items-center space-x-4">
                       <div className="flex flex-col">
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Views</span>
-                        <span className="font-bold text-slate-900 text-sm">0</span>
+                        <span className="font-bold text-black text-sm">0</span>
                       </div>
                       <div className="flex flex-col">
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Chats</span>
-                        <span className="font-bold text-slate-900 text-sm">0</span>
+                        <span className="font-bold text-black text-sm">0</span>
                       </div>
                     </div>
                     <Link 
                       href={`/listings/${listing.id}`}
-                      className="text-sm font-black text-slate-400 hover:text-indigo-600 flex items-center space-x-1 transition-colors"
+                      className="text-sm font-black text-slate-400 hover:text-brand flex items-center space-x-1 transition-colors"
                     >
                       <span>View</span>
                       <ExternalLink className="w-4 h-4" />

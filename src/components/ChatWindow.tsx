@@ -98,7 +98,7 @@ export default function ChatWindow({ conversationId, currentUser, convoData }: C
           <Link href="/messages" className="p-2 hover:bg-slate-50 rounded-xl lg:hidden text-slate-400">
             <ChevronLeft className="w-6 h-6" />
           </Link>
-          <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 overflow-hidden border-2 border-white shadow-sm">
+          <div className="w-12 h-12 bg-brand/10 rounded-2xl flex items-center justify-center text-brand overflow-hidden border-2 border-white shadow-sm">
             {otherPerson.avatar_url ? (
               <img src={otherPerson.avatar_url} alt={otherPerson.full_name} className="w-full h-full object-cover" />
             ) : (
@@ -106,7 +106,7 @@ export default function ChatWindow({ conversationId, currentUser, convoData }: C
             )}
           </div>
           <div>
-            <h2 className="font-black text-slate-900 leading-none mb-1">{otherPerson.full_name || 'User'}</h2>
+            <h2 className="font-black text-black leading-none mb-1">{otherPerson.full_name || 'User'}</h2>
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Online</span>
@@ -130,8 +130,8 @@ export default function ChatWindow({ conversationId, currentUser, convoData }: C
               )}
             </div>
             <div className="max-w-[150px]">
-              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-wider truncate">{listing.category}</p>
-              <h3 className="text-xs font-bold text-slate-900 truncate leading-none">{listing.title}</h3>
+              <p className="text-[10px] font-black text-brand uppercase tracking-wider truncate">{listing.category}</p>
+              <h3 className="text-xs font-bold text-black truncate leading-none">{listing.title}</h3>
             </div>
             <ExternalLink className="w-4 h-4 text-slate-300" />
           </Link>
@@ -145,11 +145,11 @@ export default function ChatWindow({ conversationId, currentUser, convoData }: C
       >
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-            <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-indigo-100 shadow-sm border border-slate-50">
+            <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-brand/20 shadow-sm border border-slate-50">
               <Send className="w-8 h-8" />
             </div>
             <div>
-              <p className="text-lg font-bold text-slate-900">Start the conversation</p>
+              <p className="text-lg font-bold text-black">Start the conversation</p>
               <p className="text-sm text-slate-400 font-medium">Say hello to {otherPerson.full_name?.split(' ')[0]}!</p>
             </div>
           </div>
@@ -163,11 +163,11 @@ export default function ChatWindow({ conversationId, currentUser, convoData }: C
             >
               <div className={`max-w-[70%] rounded-[28px] px-6 py-4 shadow-sm ${
                 isMe 
-                  ? 'bg-indigo-600 text-white rounded-br-lg' 
+                  ? 'bg-brand text-white rounded-br-lg' 
                   : 'bg-white text-slate-700 rounded-bl-lg border border-slate-100'
               }`}>
                 <p className="text-sm md:text-base font-medium leading-relaxed">{msg.content}</p>
-                <span className={`text-[10px] font-black uppercase tracking-wider mt-2 block ${isMe ? 'text-indigo-200' : 'text-slate-300'}`}>
+                <span className={`text-[10px] font-black uppercase tracking-wider mt-2 block ${isMe ? 'text-white/60' : 'text-slate-300'}`}>
                   {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
@@ -184,12 +184,12 @@ export default function ChatWindow({ conversationId, currentUser, convoData }: C
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type your message..."
-            className="w-full pl-6 pr-16 py-4 bg-slate-50 rounded-[20px] border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-medium"
+            className="w-full pl-6 pr-16 py-4 bg-slate-50 rounded-[20px] border-none focus:ring-2 focus:ring-brand text-black font-medium"
           />
           <button 
             type="submit"
             disabled={!newMessage.trim() || sending}
-            className="absolute right-2 p-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:shadow-none"
+            className="absolute right-2 p-3 bg-brand text-white rounded-xl hover:bg-brand-dark transition-all shadow-lg shadow-brand/10 disabled:opacity-50 disabled:shadow-none"
           >
             <Send className={`w-5 h-5 ${sending ? 'animate-pulse' : ''}`} />
           </button>

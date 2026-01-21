@@ -33,8 +33,8 @@ export default function AnalyticsCharts({ data }: { data: AnalyticsData[] }) {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
-              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+              <stop offset="5%" stopColor="#0DAC41" stopOpacity={0.1}/>
+              <stop offset="95%" stopColor="#0DAC41" stopOpacity={0}/>
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -57,12 +57,12 @@ export default function AnalyticsCharts({ data }: { data: AnalyticsData[] }) {
               boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
               padding: '12px'
             }}
-            itemStyle={{ fontWeight: 'bold', color: '#4f46e5' }}
+            itemStyle={{ fontWeight: 'bold', color: '#0DAC41' }}
           />
           <Area 
             type="monotone" 
             dataKey="views" 
-            stroke="#4f46e5" 
+            stroke="#0DAC41" 
             strokeWidth={3}
             fillOpacity={1} 
             fill="url(#colorViews)" 

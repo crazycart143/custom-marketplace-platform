@@ -34,7 +34,7 @@ export default async function MessagesPage() {
     <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 text-left">
       <div className="container mx-auto max-w-4xl">
         <div className="mb-12">
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Your Messages</h1>
+          <h1 className="text-3xl font-black text-black tracking-tight">Your Messages</h1>
           <p className="text-slate-500 font-medium">Manage your deals and conversations.</p>
         </div>
 
@@ -43,13 +43,13 @@ export default async function MessagesPage() {
             <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-300 mx-auto mb-6">
               <MessageCircle className="w-10 h-10" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">No messages yet</h2>
+            <h2 className="text-2xl font-bold text-black">No messages yet</h2>
             <p className="text-slate-500 max-w-md mx-auto mt-2 font-medium">
               Start browsing and contact sellers to see your messages here.
             </p>
             <Link 
               href="/browse" 
-              className="mt-8 inline-block px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100"
+              className="mt-8 inline-block px-8 py-4 bg-brand text-white rounded-2xl font-bold hover:bg-brand-dark transition-all shadow-xl shadow-brand/10"
             >
               Browse Marketplace
             </Link>
@@ -64,7 +64,7 @@ export default async function MessagesPage() {
                 <Link 
                   key={convo.id} 
                   href={`/messages/${convo.id}`}
-                  className="group block bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-indigo-100 transition-all"
+                  className="group block bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-brand/20 transition-all"
                 >
                   <div className="flex items-center space-x-6">
                     <div className="relative">
@@ -90,7 +90,7 @@ export default async function MessagesPage() {
 
                     <div className="grow min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-black text-slate-900 truncate group-hover:text-indigo-600 transition-colors">
+                        <h3 className="font-black text-black truncate group-hover:text-brand transition-colors">
                           {otherPerson.full_name || 'User'}
                         </h3>
                         <span className="text-xs font-bold text-slate-400">

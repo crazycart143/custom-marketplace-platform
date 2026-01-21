@@ -63,12 +63,12 @@ export default function ImageEditor({ imageSrc, onConfirm, onCancel }: ImageEdit
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-110 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-slate-900/90 backdrop-blur-md"
+        className="absolute inset-0 bg-black/90 backdrop-blur-md"
         onClick={onCancel}
       />
       
@@ -80,10 +80,10 @@ export default function ImageEditor({ imageSrc, onConfirm, onCancel }: ImageEdit
       >
         <div className="p-8 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+            <div className="p-2 bg-brand/10 text-brand rounded-xl">
               <BoxSelect className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-black text-slate-900">Crop Image</h2>
+            <h2 className="text-xl font-black text-black">Crop Image</h2>
           </div>
           <button onClick={onCancel} className="p-3 bg-slate-100 text-slate-500 rounded-2xl hover:bg-slate-200 transition-all">
             <X className="w-6 h-6" />
@@ -117,7 +117,7 @@ export default function ImageEditor({ imageSrc, onConfirm, onCancel }: ImageEdit
           </button>
           <button
             onClick={getCroppedImg}
-            className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center space-x-2"
+            className="px-8 py-4 bg-brand text-white rounded-2xl font-black hover:bg-brand-dark transition-all shadow-lg shadow-brand/10 flex items-center space-x-2"
           >
             <Check className="w-5 h-5" />
             <span>Save Crop</span>

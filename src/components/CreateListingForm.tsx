@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Package, 
@@ -14,13 +14,16 @@ import {
   X,
   Loader2,
   Video,
-  BoxSelect
+  BoxSelect,
+  AlertTriangle
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import ImageEditor from "./ImageEditor";
 import confetti from "canvas-confetti";
+import SafeZoneSelector from "./SafeZoneSelector";
+import PricingAssistant from "./PricingAssistant";
 
 const CATEGORIES = [
   "Electronics", "Fashion", "Home & Garden", "Sports & Outdoors", 
@@ -40,14 +43,34 @@ export default function CreateListingForm() {
     type: "product",
     pricing_model: "fixed",
     delivery_time: "1-3 days",
-    revisions_count: 0
+    revisions_count: 0,
+    honor_code_agreed: false,
+    safe_zone_id: null as string | null
   });
+  const [userUniversity, setUserUniversity] = useState<string>("");
+  const [userYear, setUserYear] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   
   const supabase = createClient();
   const router = useRouter();
+
+  useEffect(() => {
+    async function getUniversity() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('university, year_of_study')
+          .eq('id', user.id)
+          .single();
+        if (data?.university) setUserUniversity(data.university);
+        if (data?.year_of_study) setUserYear(data.year_of_study);
+      }
+    }
+    getUniversity();
+  }, [supabase]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -141,7 +164,9 @@ export default function CreateListingForm() {
           type: formData.type,
           pricing_model: formData.type === 'service' ? formData.pricing_model : 'fixed',
           delivery_time: formData.type === 'service' ? formData.delivery_time : null,
-          revisions_count: formData.type === 'service' ? parseInt(formData.revisions_count.toString()) : 0
+          revisions_count: formData.type === 'service' ? parseInt(formData.revisions_count.toString()) : 0,
+          honor_code_agreed: formData.honor_code_agreed,
+          safe_zone_id: formData.type === 'product' ? formData.safe_zone_id : null
         });
 
       if (insertError) throw insertError;
@@ -151,7 +176,7 @@ export default function CreateListingForm() {
         particleCount: 150,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#4f46e5', '#7c3aed', '#ec4899']
+        colors: ['#0DAC41', '#000000', '#22c55e']
       });
 
       toast.success("Listing published successfully!", { id: toastId });
@@ -179,7 +204,7 @@ export default function CreateListingForm() {
         {[1, 2, 3].map((s) => (
           <div 
             key={s}
-            className={`flex-1 transition-all duration-500 ${step >= s ? 'bg-indigo-600' : 'bg-transparent'}`}
+            className={`flex-1 transition-all duration-500 ${step >= s ? 'bg-brand' : 'bg-transparent'}`}
           />
         ))}
       </div>
@@ -194,23 +219,23 @@ export default function CreateListingForm() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div className="flex items-center space-x-3 text-indigo-600 mb-8">
+              <div className="flex items-center space-x-3 text-brand mb-8">
                 <Package className="w-8 h-8" />
-                <h2 className="text-2xl font-bold text-slate-900">Basic Information</h2>
+                <h2 className="text-2xl font-bold text-black">Basic Information</h2>
               </div>
 
               {/* Type Selection */}
               <div className="flex p-1 bg-slate-100 rounded-2xl mb-8">
                 <button
                   onClick={() => setFormData(prev => ({ ...prev, type: 'product' }))}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-xl font-bold transition-all ${formData.type === 'product' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-xl font-bold transition-all ${formData.type === 'product' ? 'bg-white text-brand shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   <Package className="w-4 h-4" />
                   <span>Physical Product</span>
                 </button>
                 <button
                   onClick={() => setFormData(prev => ({ ...prev, type: 'service' }))}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-xl font-bold transition-all ${formData.type === 'service' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-xl font-bold transition-all ${formData.type === 'service' ? 'bg-white text-brand shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   <Tag className="w-4 h-4" />
                   <span>Student Service</span>
@@ -227,7 +252,7 @@ export default function CreateListingForm() {
                   placeholder={formData.type === 'product' ? "What are you selling?" : "e.g. Professional Python Tutoring"}
                   value={formData.title}
                   onChange={handleInputChange}
-                  className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
+                  className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black"
                 />
               </div>
 
@@ -238,7 +263,7 @@ export default function CreateListingForm() {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900 appearance-none"
+                    className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black appearance-none"
                   >
                     {CATEGORIES.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -257,13 +282,37 @@ export default function CreateListingForm() {
                       placeholder="0.00"
                       value={formData.price}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
+                      className="w-full pl-12 pr-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black"
                     />
                   </div>
                 </div>
               </div>
 
               {formData.type === 'service' && (
+                <div className="md:col-span-2">
+                  <PricingAssistant 
+                    category={formData.category}
+                    yearOfStudy={userYear}
+                    pricingModel={formData.pricing_model as 'fixed' | 'hourly'}
+                  />
+                </div>
+              )}
+
+              {formData.type === 'product' && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="pt-8 border-t border-slate-100"
+            >
+              <SafeZoneSelector 
+                university={userUniversity}
+                selectedId={formData.safe_zone_id}
+                onChangeAction={(id: string | null) => setFormData({ ...formData, safe_zone_id: id })}
+              />
+            </motion.div>
+          )}
+
+          {formData.type === 'service' && (
                 <motion.div 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
@@ -276,7 +325,7 @@ export default function CreateListingForm() {
                         name="pricing_model"
                         value={formData.pricing_model}
                         onChange={handleInputChange}
-                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900 appearance-none"
+                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black appearance-none"
                       >
                         <option value="fixed">Fixed Price</option>
                         <option value="hourly">Hourly Rate</option>
@@ -290,7 +339,7 @@ export default function CreateListingForm() {
                         placeholder="e.g. 2 days"
                         value={formData.delivery_time}
                         onChange={handleInputChange}
-                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
+                        className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black"
                       />
                     </div>
                   </div>
@@ -301,9 +350,42 @@ export default function CreateListingForm() {
                       name="revisions_count"
                       value={formData.revisions_count}
                       onChange={handleInputChange}
-                      className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900"
+                      className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black"
                     />
                   </div>
+
+                  {(formData.category === 'Tutoring' || formData.category === 'Writing & Proofreading') && (
+                    <div className="md:col-span-2 p-6 bg-amber-50 rounded-3xl border border-amber-100 space-y-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                        <div className="text-left">
+                          <h4 className="text-sm font-black text-amber-900 uppercase tracking-wider">Academic Honor Code</h4>
+                          <p className="text-xs text-amber-700 font-medium leading-relaxed mt-1">
+                            By listing this service, you agree to uphold university academic integrity standards. 
+                            You will provide educational support and guidance, but will NOT perform homework, 
+                            exams, or graded assignments on behalf of other students.
+                          </p>
+                        </div>
+                      </div>
+                      <label className="flex items-center space-x-3 cursor-pointer group">
+                        <div className="relative flex items-center">
+                          <input
+                            type="checkbox"
+                            required
+                            checked={formData.honor_code_agreed}
+                            onChange={(e) => setFormData({ ...formData, honor_code_agreed: e.target.checked })}
+                            className="peer w-5 h-5 opacity-0 absolute"
+                          />
+                          <div className="w-5 h-5 border-2 border-amber-200 rounded-lg bg-white peer-checked:bg-amber-600 peer-checked:border-amber-600 transition-all flex items-center justify-center">
+                            <Check className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                          </div>
+                        </div>
+                        <span className="text-xs font-bold text-amber-900 group-hover:text-amber-700 transition-colors pt-0.5">
+                          I agree to the Studentify Academic Honor Code
+                        </span>
+                      </label>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </motion.div>
@@ -317,9 +399,9 @@ export default function CreateListingForm() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div className="flex items-center space-x-3 text-indigo-600 mb-8">
+              <div className="flex items-center space-x-3 text-brand mb-8">
                 <Tag className="w-8 h-8" />
-                <h2 className="text-2xl font-bold text-slate-900">Detailed Description</h2>
+                <h2 className="text-2xl font-bold text-black">Detailed Description</h2>
               </div>
 
               <div>
@@ -330,7 +412,7 @@ export default function CreateListingForm() {
                   placeholder="Describe your item in detail (condition, age, reason for selling, etc.)"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-600 focus:bg-white transition-all outline-none font-medium text-slate-900 resize-none"
+                  className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-brand focus:bg-white transition-all outline-none font-medium text-black resize-none"
                 />
               </div>
             </motion.div>
@@ -344,9 +426,9 @@ export default function CreateListingForm() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div className="flex items-center space-x-3 text-indigo-600 mb-8">
+              <div className="flex items-center space-x-3 text-brand mb-8">
                 <ImageIcon className="w-8 h-8" />
-                <h2 className="text-2xl font-bold text-slate-900">Upload Images</h2>
+                <h2 className="text-2xl font-bold text-black">Upload Images</h2>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -364,7 +446,7 @@ export default function CreateListingForm() {
                         {!isVideo && (
                           <button 
                             onClick={() => setEditingIndex(i)}
-                            className="p-2 bg-white text-slate-900 rounded-xl hover:bg-indigo-600 hover:text-white transition-all shadow-sm"
+                            className="p-2 bg-white text-black rounded-xl hover:bg-brand hover:text-white transition-all shadow-sm"
                             title="Crop Image"
                           >
                             <BoxSelect className="w-5 h-5" />
@@ -389,7 +471,7 @@ export default function CreateListingForm() {
                 })}
                 
                 {previews.length < 8 && (
-                  <label className="aspect-square border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-600 hover:bg-slate-50 transition-all text-slate-400 hover:text-indigo-600">
+                  <label className="aspect-square border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-brand hover:bg-slate-50 transition-all text-slate-400 hover:text-brand">
                     <Upload className="w-8 h-8 mb-2" />
                     <span className="text-xs font-bold uppercase tracking-wider">Add Media</span>
                     <input type="file" multiple accept="image/*,video/*" onChange={handleImageChange} className="hidden" />
@@ -415,7 +497,7 @@ export default function CreateListingForm() {
           {step > 1 ? (
             <button
               onClick={prevStep}
-              className="px-6 py-4 flex items-center space-x-2 text-slate-600 font-bold hover:text-slate-900 transition-colors"
+              className="px-6 py-4 flex items-center space-x-2 text-slate-600 font-bold hover:text-black transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
               <span>Back</span>
@@ -426,7 +508,7 @@ export default function CreateListingForm() {
             <button
               onClick={nextStep}
               disabled={step === 1 && !formData.title}
-              className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all flex items-center space-x-2 shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-4 bg-brand text-white rounded-2xl font-bold hover:bg-brand-dark transition-all flex items-center space-x-2 shadow-lg shadow-brand/10 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>Continue</span>
               <ChevronRight className="w-5 h-5" />
@@ -435,7 +517,7 @@ export default function CreateListingForm() {
             <button
               onClick={handleSubmit}
               disabled={loading || images.length === 0}
-              className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all flex items-center space-x-2 shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-4 bg-brand text-white rounded-2xl font-bold hover:bg-brand-dark transition-all flex items-center space-x-2 shadow-lg shadow-brand/10 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

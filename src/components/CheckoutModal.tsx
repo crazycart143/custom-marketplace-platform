@@ -60,7 +60,7 @@ const CheckoutForm = ({ clientSecret, listing, onSuccess, onCancel }: any) => {
         <button
           disabled={isLoading || !stripe || !elements}
           id="submit"
-          className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+          className="w-full py-4 bg-brand text-white rounded-2xl font-black text-lg hover:bg-brand-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
           {isLoading ? (
             <Loader2 className="w-6 h-6 animate-spin" />
@@ -104,13 +104,13 @@ export default function CheckoutModal({ listing, isOpen, onClose }: any) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
           
           <motion.div
@@ -122,7 +122,7 @@ export default function CheckoutModal({ listing, isOpen, onClose }: any) {
             <div className="p-8 lg:p-10">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-2xl font-black text-slate-900 leading-tight">Complete Purchase</h2>
+                  <h2 className="text-2xl font-black text-black leading-tight">Complete Purchase</h2>
                   <p className="text-slate-500 font-medium">Buying: {listing.title}</p>
                 </div>
                 <button
@@ -140,7 +140,7 @@ export default function CheckoutModal({ listing, isOpen, onClose }: any) {
                     appearance: {
                       theme: 'stripe',
                       variables: {
-                        colorPrimary: '#4f46e5', // indigo-600
+                        colorPrimary: '#0DAC41', // brand
                         borderRadius: '16px',
                       },
                     },
@@ -159,7 +159,7 @@ export default function CheckoutModal({ listing, isOpen, onClose }: any) {
                 </Elements>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                  <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+                  <Loader2 className="w-12 h-12 text-brand animate-spin" />
                   <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Initializing Secure Checkout...</p>
                 </div>
               )}

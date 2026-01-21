@@ -102,7 +102,7 @@ export default function ReviewSection({ sellerId, listingId }: { sellerId: strin
     <div className="mt-12 pt-12 border-t border-slate-100 text-left">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight flex items-center">
+          <h3 className="text-2xl font-black text-black tracking-tight flex items-center">
             Seller Reviews
             {averageRating && (
               <span className="ml-4 px-3 py-1 bg-amber-50 text-amber-600 text-sm font-black rounded-full flex items-center">
@@ -116,7 +116,7 @@ export default function ReviewSection({ sellerId, listingId }: { sellerId: strin
         {!showForm && (
           <button 
             onClick={() => setShowForm(true)}
-            className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-sm hover:bg-slate-800 transition-all shadow-xl shadow-slate-100"
+            className="px-6 py-3 bg-black text-white rounded-2xl font-black text-sm hover:bg-slate-800 transition-all shadow-xl shadow-slate-100"
           >
             Leave a Review
           </button>
@@ -154,14 +154,14 @@ export default function ReviewSection({ sellerId, listingId }: { sellerId: strin
                 onChange={(e) => setComment(e.target.value)}
                 required
                 placeholder="How was your experience with this seller?"
-                className="w-full px-6 py-4 bg-white rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-medium min-h-[120px]"
+                className="w-full px-6 py-4 bg-white rounded-2xl border-none focus:ring-2 focus:ring-brand text-black font-medium min-h-[120px]"
               />
             </div>
             <div className="flex space-x-4">
               <button 
                 type="submit"
                 disabled={submitting}
-                className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 disabled:opacity-50"
+                className="px-8 py-4 bg-brand text-white rounded-2xl font-black hover:bg-brand-dark transition-all shadow-xl shadow-brand/10 disabled:opacity-50"
               >
                 {submitting ? 'Submitting...' : 'Post Review'}
               </button>
@@ -200,7 +200,7 @@ export default function ReviewSection({ sellerId, listingId }: { sellerId: strin
                     )}
                   </div>
                   <div>
-                    <h4 className="font-black text-slate-900 text-sm leading-none mb-1">{review.reviewer.full_name || 'Anonymous'}</h4>
+                    <h4 className="font-black text-black text-sm leading-none mb-1">{review.reviewer.full_name || 'Anonymous'}</h4>
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                       {new Date(review.created_at).toLocaleDateString()}
                     </span>

@@ -54,13 +54,13 @@ export default function ReportModal({ listingId, isOpen, onClose }: any) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
           
           <motion.div
@@ -76,7 +76,7 @@ export default function ReportModal({ listingId, isOpen, onClose }: any) {
                     <Flag className="w-6 h-6" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-black text-slate-900 leading-tight">Report Listing</h2>
+                    <h2 className="text-xl font-black text-black leading-tight">Report Listing</h2>
                     <p className="text-slate-500 text-sm font-medium">Why are you reporting this?</p>
                   </div>
                 </div>
@@ -112,7 +112,7 @@ export default function ReportModal({ listingId, isOpen, onClose }: any) {
                   <textarea
                     required
                     rows={3}
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 font-medium text-slate-900 focus:border-red-600 focus:bg-white transition-all outline-none resize-none"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 font-medium text-black focus:border-red-600 focus:bg-white transition-all outline-none resize-none"
                     placeholder="Please specify..."
                   />
                 )}

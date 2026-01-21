@@ -57,13 +57,13 @@ export default function OfferModal({ listing, isOpen, onClose }: any) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
           
           <motion.div
@@ -75,7 +75,7 @@ export default function OfferModal({ listing, isOpen, onClose }: any) {
             <form onSubmit={handleSubmit} className="p-8 lg:p-10 text-left">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-2xl font-black text-slate-900 leading-tight">Make an Offer</h2>
+                  <h2 className="text-2xl font-black text-black leading-tight">Make an Offer</h2>
                   <p className="text-slate-500 font-medium">For: {listing.title}</p>
                 </div>
                 <button
@@ -97,7 +97,7 @@ export default function OfferModal({ listing, isOpen, onClose }: any) {
                       required
                       value={amount}
                       onChange={(e) => setAmount(Number(e.target.value))}
-                      className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl py-5 pl-12 pr-6 text-2xl font-black text-slate-900 focus:border-indigo-600 focus:bg-white transition-all outline-none"
+                      className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl py-5 pl-12 pr-6 text-2xl font-black text-black focus:border-brand focus:bg-white transition-all outline-none"
                       placeholder="0.00"
                     />
                   </div>
@@ -110,19 +110,19 @@ export default function OfferModal({ listing, isOpen, onClose }: any) {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     rows={3}
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 font-medium text-slate-900 focus:border-indigo-600 focus:bg-white transition-all outline-none resize-none"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 font-medium text-black focus:border-brand focus:bg-white transition-all outline-none resize-none"
                     placeholder="Tell the seller why you're making this offer..."
                   />
                 </div>
 
-                <div className="bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100/50">
+                <div className="bg-brand/5 p-6 rounded-3xl border border-brand/10">
                   <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-white rounded-xl text-indigo-600 shadow-sm">
+                    <div className="p-2 bg-white rounded-xl text-brand shadow-sm">
                       <Tag className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-black text-indigo-900 text-sm">Offer Policy</h4>
-                      <p className="text-indigo-700/70 text-xs font-medium mt-1 leading-relaxed">
+                      <h4 className="font-black text-brand text-sm">Offer Policy</h4>
+                      <p className="text-brand/70 text-xs font-medium mt-1 leading-relaxed">
                         Offers expire in 48 hours. If the seller accepts, you'll be notified to complete the payment.
                       </p>
                     </div>
@@ -133,7 +133,7 @@ export default function OfferModal({ listing, isOpen, onClose }: any) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 disabled:opacity-50 flex items-center justify-center space-x-2"
+                    className="w-full py-4 bg-brand text-white rounded-2xl font-black text-lg hover:bg-brand-dark transition-all shadow-lg shadow-brand/10 disabled:opacity-50 flex items-center justify-center space-x-2"
                   >
                     {isSubmitting ? (
                       <Loader2 className="w-6 h-6 animate-spin" />
@@ -147,7 +147,7 @@ export default function OfferModal({ listing, isOpen, onClose }: any) {
                   <button
                     type="button"
                     onClick={onClose}
-                    className="w-full py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all font-black"
+                    className="w-full py-4 bg-slate-100 text-slate-600 rounded-2xl hover:bg-slate-200 transition-all font-black"
                   >
                     Cancel
                   </button>

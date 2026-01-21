@@ -73,7 +73,7 @@ export default function ContactSellerButton({ listingId, sellerId }: ContactSell
     <button 
       onClick={handleContact}
       disabled={loading}
-      className="w-full py-5 bg-indigo-600 text-white rounded-[24px] font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center space-x-3 group disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full py-5 bg-brand text-white rounded-[24px] font-black text-lg hover:bg-brand-dark transition-all shadow-xl shadow-brand/10 flex items-center justify-center space-x-3 group disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <MessageCircle className={`w-6 h-6 ${loading ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
       <span>{loading ? 'Starting Chat...' : 'Contact Seller'}</span>

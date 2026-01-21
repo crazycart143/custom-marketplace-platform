@@ -17,8 +17,8 @@ export default async function SimilarItems({ category, currentListingId }: { cat
   return (
     <div className="mt-20">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-3xl font-black text-slate-900 tracking-tight text-left">
-          Similar <span className="text-indigo-600">Items</span>
+        <h2 className="text-3xl font-black text-black tracking-tight text-left">
+          Similar <span className="text-brand">Items</span>
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

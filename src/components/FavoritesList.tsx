@@ -37,7 +37,7 @@ export default function FavoritesList() {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-brand animate-spin" />
       </div>
     );
   }
@@ -46,9 +46,9 @@ export default function FavoritesList() {
     return (
       <div className="text-center py-12 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
         <Heart className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-        <h3 className="font-black text-slate-900">No favorites yet</h3>
+        <h3 className="font-black text-black">No favorites yet</h3>
         <p className="text-slate-500 text-sm mt-1 font-medium">Items you heart will appear here.</p>
-        <Link href="/browse" className="mt-4 inline-block text-indigo-600 font-bold text-sm hover:underline">
+        <Link href="/browse" className="mt-4 inline-block text-brand font-bold text-sm hover:underline">
           Explore Marketplace
         </Link>
       </div>

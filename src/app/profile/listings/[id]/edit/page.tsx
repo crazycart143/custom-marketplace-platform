@@ -34,12 +34,12 @@ export default async function EditListingPage({ params }: { params: Promise<{ id
         <div className="max-w-4xl mx-auto mb-10 text-left">
           <Link 
             href="/profile/listings" 
-            className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-indigo-600 transition-colors mb-6 group"
+            className="inline-flex items-center space-x-2 text-slate-500 font-bold hover:text-brand transition-colors mb-6 group"
           >
             <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span>Back to My Listings</span>
           </Link>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Edit <span className="text-indigo-600">Listing</span></h1>
+          <h1 className="text-4xl font-black text-black tracking-tight">Edit <span className="text-brand">Listing</span></h1>
           <p className="text-slate-500 font-medium mt-2">Adjust your item details and gallery for better visibility.</p>
         </div>
 

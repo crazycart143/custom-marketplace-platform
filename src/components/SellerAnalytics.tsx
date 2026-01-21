@@ -66,7 +66,7 @@ export default function SellerAnalytics() {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-brand animate-spin" />
       </div>
     );
   }
@@ -74,13 +74,13 @@ export default function SellerAnalytics() {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100/50 flex items-center space-x-4">
-          <div className="p-3 bg-white rounded-2xl text-indigo-600 shadow-sm">
+        <div className="p-6 bg-brand/5 rounded-3xl border border-brand/10 flex items-center space-x-4">
+          <div className="p-3 bg-white rounded-2xl text-brand shadow-sm">
             <Eye className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs font-black text-indigo-600/60 uppercase tracking-widest">Growth Views</span>
-            <div className="text-2xl font-black text-indigo-900">{stats.totalViews}</div>
+            <span className="text-xs font-black text-brand/60 uppercase tracking-widest">Growth Views</span>
+            <div className="text-2xl font-black text-brand">{stats.totalViews}</div>
           </div>
         </div>
         <div className="p-6 bg-rose-50/50 rounded-3xl border border-rose-100/50 flex items-center space-x-4">

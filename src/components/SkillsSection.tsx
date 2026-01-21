@@ -157,7 +157,7 @@ export default function SkillsSection({ profileId, isOwnProfile }: { profileId: 
               className={`group flex items-center space-x-2 px-4 py-2 rounded-2xl border-2 transition-all ${
                 isOwnProfile 
                   ? "bg-slate-50 border-slate-100 cursor-default" 
-                  : "bg-white border-slate-100 hover:border-indigo-600 hover:shadow-md"
+                  : "bg-white border-slate-100 hover:border-brand hover:shadow-md"
               }`}
             >
               <span className="font-bold text-slate-700 capitalize">{skill.name}</span>
@@ -176,12 +176,12 @@ export default function SkillsSection({ profileId, isOwnProfile }: { profileId: 
               value={newSkill}
               onChange={(e) => setNewSkill(e.target.value)}
               placeholder="Add skill (e.g. React)"
-              className="pl-4 pr-10 py-2 bg-indigo-50 border-2 border-indigo-100 rounded-2xl text-sm font-bold text-indigo-700 placeholder:text-indigo-300 focus:outline-none focus:border-indigo-600 w-48 transition-all"
+              className="pl-4 pr-10 py-2 bg-brand/10 border-2 border-brand/20 rounded-2xl text-sm font-bold text-brand placeholder:text-brand/40 focus:outline-none focus:border-brand w-48 transition-all"
             />
             <button 
               type="submit"
               disabled={adding || !newSkill.trim()}
-              className="absolute right-2 p-1 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-colors"
+              className="absolute right-2 p-1 text-brand hover:bg-brand/10 rounded-lg transition-colors"
             >
               {adding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-5 h-5" />}
             </button>

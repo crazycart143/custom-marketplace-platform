@@ -1,236 +1,252 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, User, MessageCircle, Menu, X, LogIn } from "lucide-react";
-import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { 
+  ShoppingBag, 
+  Search, 
+  MessageSquare, 
+  User, 
+  Menu, 
+  X,
+  PlusCircle,
+  LayoutDashboard,
+  LogOut,
+  MapPin
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 
-export default function Navbar() {
+const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
-  
+  const pathname = usePathname();
   const supabase = createClient();
-  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    
-    const getData = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
+
+    const fetchProfile = async (userId: string) => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      setProfile(data);
+    };
+
+    const initAuth = async () => {
+      console.log('[Navbar] Initializing auth...');
+      // Use getUser() instead of getSession() - it properly reads cookies
+      const { data: { user }, error } = await supabase.auth.getUser();
       
-      if (session?.user) {
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('avatar_url, full_name')
-          .eq('id', session.user.id)
-          .single();
-        setProfile(profileData);
-      } else {
-        setProfile(null);
+      console.log('[Navbar] User from getUser():', user?.email || 'None', 'Error:', error?.message || 'None');
+      
+      if (user && !error) {
+        setUser(user);
+        await fetchProfile(user.id);
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Initialize auth immediately
+    initAuth();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        getData();
+        await fetchProfile(session.user.id);
       } else {
         setProfile(null);
       }
     });
 
-    getData();
     window.addEventListener("scroll", handleScroll);
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/browse?q=${encodeURIComponent(searchQuery)}`);
-      setIsSearchOpen(false);
-      setSearchQuery("");
-    }
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/';
   };
+
+  const navLinks = [
+    { name: "Browse", href: "/browse" },
+    { name: "Sell", href: "/sell" },
+    { name: "About", href: "/about" },
+  ];
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/80 backdrop-blur-md shadow-sm py-3"
-          : "bg-transparent py-5"
+          ? "bg-white/80 backdrop-blur-md border-b border-slate-200 py-3 mt-4 mx-4 rounded-2xl shadow-lg border border-white/20"
+          : "bg-transparent py-6"
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-2 group">
+          <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center shadow-lg shadow-brand/20 group-hover:scale-110 transition-transform">
             <ShoppingBag className="text-white w-6 h-6" />
           </div>
-          <span className={`text-2xl font-bold tracking-tight ${isScrolled ? "text-slate-900" : "text-white"}`}>
+          <span className={`text-2xl font-black tracking-tight ${isScrolled ? "text-black" : "text-black"}`}>
             Studentify
           </span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <nav className="flex space-x-6">
-            {['Browse', 'Sell', 'About'].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className={`font-medium transition-colors hover:text-indigo-600 ${
-                  isScrolled ? "text-slate-600" : "text-slate-100"
-                }`}
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
-          
-          <div className="h-6 w-px bg-slate-200/20" />
-
-          <div className="flex items-center space-x-4">
-            <AnimatePresence mode="wait">
-              {isSearchOpen ? (
-                <motion.form
-                  key="search-form"
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 300, opacity: 1 }}
-                  exit={{ width: 0, opacity: 0 }}
-                  onSubmit={handleSearch}
-                  className="relative flex items-center"
-                >
-                  <input
-                    autoFocus
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search market..."
-                    className="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-900"
-                  />
-                  <Search className="absolute left-3 w-4 h-4 text-slate-400" />
-                  <button 
-                    type="button"
-                    onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-3 text-slate-400 hover:text-slate-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </motion.form>
-              ) : (
-                <motion.button
-                  key="search-btn"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onClick={() => setIsSearchOpen(true)}
-                  className={`p-2 rounded-full transition-colors hover:bg-slate-100/10 ${
-                    isScrolled ? "text-slate-600" : "text-white"
-                  }`}
-                >
-                  <Search className="w-5 h-5" />
-                </motion.button>
-              )}
-            </AnimatePresence>
-
-            <Link 
-              href="/messages"
-              className={`p-2 rounded-full transition-colors hover:bg-slate-100/10 ${
-                isScrolled ? "text-slate-600" : "text-white"
-              }`}
-            >
-              <MessageCircle className="w-5 h-5" />
-            </Link>
-            
+          {navLinks.map((link) => (
             <Link
-              href={user ? "/profile" : "/auth"}
-              className={`flex items-center space-x-2 p-1.5 pr-4 rounded-full font-black transition-all ${
-                isScrolled
-                  ? "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-100"
-                  : "bg-white text-indigo-600 hover:bg-slate-50 shadow-xl"
+              key={link.name}
+              href={link.href}
+              className={`text-sm font-semibold hover:text-brand transition-colors ${
+                pathname === link.href ? "text-brand" : "text-slate-600"
               }`}
             >
-              {user ? (
-                <>
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100">
-                    {profile?.avatar_url ? (
-                      <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-600">
-                        <User className="w-4 h-4" />
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-sm">Dashboard</span>
-                </>
-              ) : (
-                <>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 text-slate-400">
-                    <LogIn className="w-4 h-4" />
-                  </div>
-                  <span className="text-sm">Sign In</span>
-                </>
-              )}
+              {link.name}
             </Link>
-          </div>
+          ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="hidden md:flex items-center space-x-4">
+          <button className="p-2 text-slate-600 hover:text-brand transition-colors">
+            <Search className="w-5 h-5" />
+          </button>
+          
+          {user ? (
+            <>
+              <Link href="/messages" className="p-2 text-slate-600 hover:text-brand transition-colors relative">
+                <MessageSquare className="w-5 h-5" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-brand rounded-full border-2 border-white" />
+              </Link>
+              <div className="h-6 w-px bg-slate-200 mx-2" />
+              <Link
+                href="/profile"
+                className="flex items-center space-x-3 pl-2 group"
+              >
+                <div className="text-right">
+                  <p className="text-sm font-bold text-black group-hover:text-brand transition-colors">
+                    {profile?.full_name || "Student User"}
+                  </p>
+                  <p className="text-xs text-slate-500">Dashboard</p>
+                </div>
+                <div className="w-10 h-10 rounded-full border-2 border-brand/20 p-0.5 group-hover:border-brand transition-all">
+                  {profile?.avatar_url ? (
+                    <img
+                      src={profile.avatar_url}
+                      alt="Avatar"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full rounded-full bg-slate-100 flex items-center justify-center">
+                      <User className="w-5 h-5 text-slate-400" />
+                    </div>
+                  )}
+                </div>
+              </Link>
+              <button 
+                onClick={handleSignOut}
+                className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="h-6 w-px bg-slate-200 mx-2" />
+              <Link
+                href="/auth"
+                className="flex items-center space-x-2 bg-brand/10 text-brand px-5 py-2.5 rounded-xl font-bold hover:bg-brand hover:text-white transition-all shadow-sm"
+              >
+                <User className="w-4 h-4" />
+                <span>Sign In</span>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 text-slate-600"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {mobileMenuOpen ? (
-            <X className={isScrolled ? "text-slate-900" : "text-white"} />
-          ) : (
-            <Menu className={isScrolled ? "text-slate-900" : "text-white"} />
-          )}
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-white shadow-xl py-6 px-6 md:hidden flex flex-col space-y-4"
+            className="absolute top-full left-4 right-4 bg-white mt-4 p-6 rounded-3xl shadow-2xl border border-slate-100 md:hidden overflow-hidden"
           >
-            <form onSubmit={handleSearch} className="relative mb-2">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search market..."
-                className="w-full pl-10 pr-4 py-3 bg-slate-100 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 text-slate-900"
-              />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            </form>
-            {['Browse', 'Sell', 'About', 'Account'].map((item) => (
-              <Link
-                key={item}
-                href={item === 'Account' ? (user ? '/profile' : '/auth') : `/${item.toLowerCase()}`}
-                className="text-lg font-medium text-slate-900 hover:text-indigo-600"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item}
-              </Link>
-            ))}
+            <div className="flex flex-col space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-lg font-bold text-slate-600 hover:text-brand px-4 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <div className="h-px bg-slate-100 my-2" />
+              {user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    className="flex items-center space-x-3 px-4 py-3 bg-slate-50 rounded-2xl"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                      <User className="w-5 h-5 text-brand" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-black">{profile?.full_name || "Dashboard"}</p>
+                      <p className="text-sm text-slate-500">View Profile</p>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center space-x-2 text-red-500 font-bold px-4 py-2"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span>Sign Out</span>
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/auth"
+                  className="bg-brand text-white px-6 py-4 rounded-2xl font-bold flex items-center justify-center space-x-2 shadow-lg shadow-brand/20"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <User className="w-5 h-5" />
+                  <span>Sign In</span>
+                </Link>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </nav>
   );
-}
+};
+
+export default Navbar;

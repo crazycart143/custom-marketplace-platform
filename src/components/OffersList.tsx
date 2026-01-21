@@ -61,7 +61,7 @@ export default function OffersList() {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-brand animate-spin" />
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function OffersList() {
     return (
       <div className="text-center py-12 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
         <Tag className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-        <h3 className="font-black text-slate-900">No offers yet</h3>
+        <h3 className="font-black text-black">No offers yet</h3>
         <p className="text-slate-500 text-sm mt-1 font-medium">When you make or receive offers, they'll appear here.</p>
       </div>
     );
@@ -84,15 +84,15 @@ export default function OffersList() {
         const isOwner = true; // Placeholder, we should check against current user
 
         return (
-          <div key={offer.id} className="bg-white border border-slate-100 rounded-[32px] p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-lg hover:shadow-indigo-100/20 transition-all">
+          <div key={offer.id} className="bg-white border border-slate-100 rounded-[32px] p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-lg hover:shadow-brand/5 transition-all">
             <div className="flex items-center space-x-4">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${offer.status === 'pending' ? 'bg-indigo-50 text-indigo-600' : offer.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${offer.status === 'pending' ? 'bg-brand/5 text-brand' : offer.status === 'accepted' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
                 <Tag className="w-7 h-7" />
               </div>
               <div className="text-left">
-                <h4 className="font-black text-slate-900">{offer.listing.title}</h4>
+                <h4 className="font-black text-black">{offer.listing.title}</h4>
                 <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-2xl font-black text-indigo-600">${offer.amount.toLocaleString()}</span>
+                  <span className="text-2xl font-black text-brand">${offer.amount.toLocaleString()}</span>
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none bg-slate-50 px-2 py-1 rounded-md line-through">
                     ${offer.listing.price.toLocaleString()}
                   </span>
@@ -133,7 +133,7 @@ export default function OffersList() {
                 </>
               )}
               {offer.message && (
-                <button className="p-3 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 hover:text-indigo-600 transition-all group" title={offer.message}>
+                <button className="p-3 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 hover:text-brand transition-all group" title={offer.message}>
                   <MessageCircle className="w-5 h-5" />
                 </button>
               )}
